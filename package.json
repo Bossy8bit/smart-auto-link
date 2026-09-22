@@ -1,0 +1,20 @@
+{
+  "name": "smart-auto-link",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.mjs",
+    "build": "node esbuild.mjs production",
+    "typecheck": "tsc --noEmit",
+    "test": "node test.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "latest",
+    "typescript": "^5.8.0"
+  },
+  "dependencies": {
+    "mdast-util-from-markdown": "^2.0.2"
+  }
+}

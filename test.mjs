@@ -1,0 +1,31 @@
+import { build } from 'esbuild';
+import assert from 'node:assert/strict';
+const result = await build({ entryPoints:['linker.ts'], bundle:true, platform:'node', format:'esm', write:false });
+const { autoLink } = await import('data:text/javascript;base64,' + Buffer.from(result.outputFiles[0].text).toString('base64'));
+const entry = (text, target = text) => ({text,target,file:{path:target+'.md'},isAlias:text!==target});
+const options = {caseSensitive:false,wholeWord:true};
+let passed = 0;
+function check(name, input, expected, entries=[entry('Python')], opts=options) {
+  const output = autoLink(input, entries, opts);
+  assert.equal(output, expected, name);
+  assert.equal(autoLink(output, entries, opts), output, name+' idempotence');
+  console.log('PASS '+name); passed++;
+}
+check('plain and capitalization','Python PYTHON Pythonic','[[Python]] [[Python|PYTHON]] Pythonic');
+check('longest match without nesting','Quantum Computing Quantum','[[Quantum Computing]] [[Quantum]]',[entry('Quantum'),entry('Quantum Computing')]);
+check('alias and full path','AI Python','[[Concepts/Artificial Intelligence|AI]] [[Languages/Python|Python]]',[entry('AI','Concepts/Artificial Intelligence'),entry('Python','Languages/Python')]);
+check('ambiguous alias','Python','Python',[entry('Python','A/Python'),entry('Python','B/Python')]);
+check('existing links','[[Python]] ![[Python]] [Python](https://example.com/a(b))','[[Python]] ![[Python]] [Python](https://example.com/a(b))');
+check('code','`Python`\n\n~~~js\nPython\n~~~\n\n    Python\n','`Python`\n\n~~~js\nPython\n~~~\n\n    Python\n');
+check('frontmatter CRLF','---\r\naliases: Python\r\n---\r\nPython','---\r\naliases: Python\r\n---\r\n[[Python]]');
+check('nested protection','`[[Python]] https://Python.org` Python','`[[Python]] https://Python.org` [[Python]]');
+check('comments math urls','%% Python %% $Python$ https://Python.org Python','%% Python %% $Python$ https://Python.org [[Python]]');
+check('reference links','[Python][ref]\n\n[ref]: https://Python.org\n','[Python][ref]\n\n[ref]: https://Python.org\n');
+check('Thai boundaries','เรียน ภาษาไทย ภาษาไทยดี','เรียน [[ภาษาไทย]] ภาษาไทยดี',[entry('ภาษาไทย')]);
+check('combining marks','Cafe\u0301 Cafe','Cafe\u0301 [[Cafe]]',[entry('Cafe')]);
+check('case sensitive','python Python','python [[Python]]',[entry('Python')],{...options,caseSensitive:true});
+check('regex metacharacters','C++','[[C++]]',[entry('C++')]);
+check('tables and tags','| Python |\n#Python\nPython','| Python |\n#Python\n[[Python]]');
+check('unclosed fence','```\nPython','```\nPython');
+check('duplicate alias same target','Python','[[Python]]',[entry('Python'),entry('Python')]);
+console.log(`${passed} cases passed, including repeat-run checks.`);
