@@ -42,8 +42,18 @@ var messages = {
     auto: "Auto (Obsidian)",
     english: "English",
     thai: "\u0E44\u0E17\u0E22",
+    keywordHeading: "Keywords and highlights",
+    keywordHelp: "Write ==term== in the destination note, or add a keywords property. The same text in other notes will link back here. Supports any language, including short terms.",
+    highlights: "Use ==highlights== as keywords",
+    highlightsDesc: "Highlighted text defines a keyword pointing to the note that contains it. Keep the source highlight unchanged.",
+    keywords: "Use the keywords property",
+    keywordsDesc: "Add a list named keywords in note Properties, for example: tax, AI, \u7A0E.",
+    applyKeywords: "Link matching text across the vault",
+    applyKeywordsDesc: "Scan definitions and apply links now. A term defined in multiple notes is skipped.",
+    applyNow: "Link entire vault now",
+    keywordCount: (count) => count ? "Keyword definitions indexed: " + count + "." : "No keyword definitions found. Add ==term== or a keywords property to a destination note.",
     automatic: "Link when opening or saving a note",
-    automaticDesc: "Optional: update notes automatically after opening or saving. Off by default.",
+    automaticDesc: "Off by default. Link opened/saved notes; changed keyword definitions also update matching notes across the vault.",
     titleKeywords: "Link keywords from note titles",
     titleKeywordsDesc: "Find distinctive words and phrases in note titles automatically. Shared terms are skipped.",
     aliases: "Use aliases",
@@ -53,7 +63,7 @@ var messages = {
     wholeWord: "Whole word matching",
     wholeWordDesc: "Avoid matching terms that are part of a larger word.",
     minLength: "Minimum term length",
-    minLengthDesc: "Ignore note names and aliases shorter than this. Set to 2 for AI."
+    minLengthDesc: "Minimum for note names, aliases, and inferred terms. Does not limit explicit highlights or keywords."
   },
   th: {
     currentCommand: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E43\u0E19\u0E42\u0E19\u0E49\u0E15\u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19",
@@ -70,8 +80,18 @@ var messages = {
     auto: "\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 (Obsidian)",
     english: "English",
     thai: "\u0E44\u0E17\u0E22",
+    keywordHeading: "\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E41\u0E25\u0E30\u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C",
+    keywordHelp: "\u0E40\u0E02\u0E35\u0E22\u0E19 ==\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D== \u0E43\u0E19\u0E42\u0E19\u0E49\u0E15\u0E1B\u0E25\u0E32\u0E22\u0E17\u0E32\u0E07 \u0E2B\u0E23\u0E37\u0E2D\u0E40\u0E1E\u0E34\u0E48\u0E21 Properties \u0E0A\u0E37\u0E48\u0E2D keywords \u0E04\u0E33\u0E40\u0E14\u0E35\u0E22\u0E27\u0E01\u0E31\u0E19\u0E43\u0E19\u0E42\u0E19\u0E49\u0E15\u0E2D\u0E37\u0E48\u0E19\u0E08\u0E30\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E01\u0E25\u0E31\u0E1A\u0E21\u0E32\u0E17\u0E35\u0E48\u0E42\u0E19\u0E49\u0E15\u0E19\u0E35\u0E49 \u0E23\u0E2D\u0E07\u0E23\u0E31\u0E1A\u0E17\u0E38\u0E01\u0E20\u0E32\u0E29\u0E32 \u0E23\u0E27\u0E21\u0E16\u0E36\u0E07\u0E04\u0E33\u0E2A\u0E31\u0E49\u0E19",
+    highlights: "\u0E43\u0E0A\u0E49 ==\u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C== \u0E40\u0E1B\u0E47\u0E19\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D",
+    highlightsDesc: "\u0E02\u0E49\u0E2D\u0E04\u0E27\u0E32\u0E21\u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C\u0E40\u0E1B\u0E47\u0E19\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E17\u0E35\u0E48\u0E0A\u0E35\u0E49\u0E01\u0E25\u0E31\u0E1A\u0E21\u0E32\u0E22\u0E31\u0E07\u0E42\u0E19\u0E49\u0E15\u0E17\u0E35\u0E48\u0E21\u0E35\u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C \u0E42\u0E14\u0E22\u0E04\u0E07\u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C\u0E15\u0E49\u0E19\u0E09\u0E1A\u0E31\u0E1A\u0E44\u0E27\u0E49",
+    keywords: "\u0E43\u0E0A\u0E49 Properties \u0E0A\u0E37\u0E48\u0E2D keywords",
+    keywordsDesc: "\u0E40\u0E1E\u0E34\u0E48\u0E21\u0E23\u0E32\u0E22\u0E01\u0E32\u0E23 keywords \u0E43\u0E19 Properties \u0E02\u0E2D\u0E07\u0E42\u0E19\u0E49\u0E15 \u0E40\u0E0A\u0E48\u0E19 \u0E20\u0E32\u0E29\u0E35, AI, \u7A0E",
+    applyKeywords: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E08\u0E32\u0E01\u0E04\u0E33\u0E17\u0E35\u0E48\u0E15\u0E23\u0E07\u0E01\u0E31\u0E19\u0E17\u0E31\u0E49\u0E07 Vault",
+    applyKeywordsDesc: "\u0E2A\u0E41\u0E01\u0E19\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E41\u0E25\u0E49\u0E27\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E17\u0E31\u0E19\u0E17\u0E35 \u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E16\u0E39\u0E01\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E44\u0E27\u0E49\u0E43\u0E19\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15",
+    applyNow: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E17\u0E31\u0E49\u0E07 Vault \u0E15\u0E2D\u0E19\u0E19\u0E35\u0E49",
+    keywordCount: (count) => count ? "\u0E1E\u0E1A\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E17\u0E35\u0E48\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E44\u0E27\u0E49 " + count + " \u0E23\u0E32\u0E22\u0E01\u0E32\u0E23" : "\u0E22\u0E31\u0E07\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D \u0E40\u0E1E\u0E34\u0E48\u0E21 ==\u0E04\u0E33== \u0E2B\u0E23\u0E37\u0E2D Properties \u0E0A\u0E37\u0E48\u0E2D keywords \u0E43\u0E19\u0E42\u0E19\u0E49\u0E15\u0E1B\u0E25\u0E32\u0E22\u0E17\u0E32\u0E07",
     automatic: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E42\u0E19\u0E49\u0E15",
-    automaticDesc: "\u0E40\u0E1B\u0E34\u0E14\u0E43\u0E0A\u0E49\u0E40\u0E2D\u0E07\u0E2B\u0E32\u0E01\u0E15\u0E49\u0E2D\u0E07\u0E01\u0E32\u0E23\u0E43\u0E2B\u0E49\u0E1B\u0E25\u0E31\u0E4A\u0E01\u0E2D\u0E34\u0E19\u0E41\u0E01\u0E49\u0E42\u0E19\u0E49\u0E15\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E04\u0E48\u0E32\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19\u0E1B\u0E34\u0E14",
+    automaticDesc: "\u0E04\u0E48\u0E32\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19\u0E1B\u0E34\u0E14 \u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E43\u0E0A\u0E49\u0E08\u0E30\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E15\u0E2D\u0E19\u0E40\u0E1B\u0E34\u0E14/\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01 \u0E41\u0E25\u0E30\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E40\u0E1B\u0E25\u0E35\u0E48\u0E22\u0E19\u0E08\u0E30\u0E2D\u0E31\u0E1B\u0E40\u0E14\u0E15\u0E42\u0E19\u0E49\u0E15\u0E17\u0E35\u0E48\u0E15\u0E23\u0E07\u0E01\u0E31\u0E19\u0E17\u0E31\u0E49\u0E07 Vault",
     titleKeywords: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15",
     titleKeywordsDesc: "\u0E14\u0E36\u0E07\u0E04\u0E33\u0E2B\u0E23\u0E37\u0E2D\u0E27\u0E25\u0E35\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E43\u0E2B\u0E49\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E41\u0E25\u0E30\u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E0A\u0E35\u0E49\u0E44\u0E14\u0E49\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15",
     aliases: "\u0E43\u0E0A\u0E49\u0E0A\u0E37\u0E48\u0E2D\u0E2D\u0E37\u0E48\u0E19 (aliases)",
@@ -81,7 +101,7 @@ var messages = {
     wholeWord: "\u0E08\u0E31\u0E1A\u0E04\u0E39\u0E48\u0E17\u0E31\u0E49\u0E07\u0E04\u0E33",
     wholeWordDesc: "\u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E40\u0E1B\u0E47\u0E19\u0E2A\u0E48\u0E27\u0E19\u0E2B\u0E19\u0E36\u0E48\u0E07\u0E02\u0E2D\u0E07\u0E04\u0E33\u0E22\u0E32\u0E27\u0E01\u0E27\u0E48\u0E32",
     minLength: "\u0E04\u0E27\u0E32\u0E21\u0E22\u0E32\u0E27\u0E04\u0E33\u0E02\u0E31\u0E49\u0E19\u0E15\u0E48\u0E33",
-    minLengthDesc: "\u0E02\u0E49\u0E32\u0E21\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E41\u0E25\u0E30 aliases \u0E17\u0E35\u0E48\u0E2A\u0E31\u0E49\u0E19\u0E01\u0E27\u0E48\u0E32\u0E04\u0E48\u0E32\u0E19\u0E35\u0E49 \u0E16\u0E49\u0E32\u0E15\u0E49\u0E2D\u0E07\u0E01\u0E32\u0E23 AI \u0E43\u0E2B\u0E49\u0E15\u0E31\u0E49\u0E07\u0E40\u0E1B\u0E47\u0E19 2"
+    minLengthDesc: "\u0E43\u0E0A\u0E49\u0E01\u0E31\u0E1A\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15 aliases \u0E41\u0E25\u0E30\u0E04\u0E33\u0E17\u0E35\u0E48\u0E14\u0E36\u0E07\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E44\u0E21\u0E48\u0E08\u0E33\u0E01\u0E31\u0E14\u0E04\u0E27\u0E32\u0E21\u0E22\u0E32\u0E27\u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C\u0E2B\u0E23\u0E37\u0E2D keywords \u0E17\u0E35\u0E48\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E40\u0E2D\u0E07"
   }
 };
 function resolveLanguage(language) {
@@ -4904,19 +4924,33 @@ function defaultOnError(left, right) {
 
 // linker.ts
 var escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-function autoLink(content3, entries, options) {
+function resolveEntries(entries, caseSensitive, sourcePath) {
   var _a;
-  const key = (s) => options.caseSensitive ? s : s.toLowerCase();
+  const key = (s) => caseSensitive ? s : s.toLowerCase();
   const groups = /* @__PURE__ */ new Map();
   for (const entry of entries) {
-    if (!entry.text || /[\[\]|#^\r\n]/.test(entry.target + entry.text)) continue;
+    if (!entry.text || /[\[\]|#^\r\n]/.test(entry.target) || /[\[\]|\r\n]/.test(entry.text)) continue;
     const k = key(entry.text);
     groups.set(k, [...(_a = groups.get(k)) != null ? _a : [], entry]);
   }
-  const unique = /* @__PURE__ */ new Map();
-  for (const [k, group] of groups) {
-    if (new Set(group.map((e) => e.file.path)).size === 1) unique.set(k, group[0]);
+  const result = [];
+  for (const group of groups.values()) {
+    const priority = Math.max(...group.map((entry) => {
+      var _a2;
+      return (_a2 = entry.priority) != null ? _a2 : 0;
+    }));
+    const preferred = group.filter((entry) => {
+      var _a2;
+      return ((_a2 = entry.priority) != null ? _a2 : 0) === priority;
+    });
+    if (new Set(preferred.map((entry) => entry.file.path)).size !== 1) continue;
+    if (preferred[0].file.path !== sourcePath) result.push(preferred[0]);
   }
+  return result;
+}
+function autoLink(content3, entries, options) {
+  const key = (s) => options.caseSensitive ? s : s.toLowerCase();
+  const unique = new Map(resolveEntries(entries, options.caseSensitive).map((entry) => [key(entry.text), entry]));
   const terms = [...unique.values()].sort((a, b) => b.text.length - a.text.length);
   if (!terms.length) return content3;
   const regex = new RegExp(terms.map((e) => escape(e.text)).join("|"), options.caseSensitive ? "gu" : "giu");
@@ -4929,14 +4963,19 @@ function autoLink(content3, entries, options) {
   protect(/%%[\s\S]*?(?:%%|$)/g);
   protect(/\$\$[\s\S]*?(?:\$\$|$)|\$[^\n$]+\$/g);
   protect(/(?:https?:\/\/|mailto:|www\.)[^\s<>]+/gi);
-  protect(/^.*\|.*$/gm);
+  protect(/(?<!=)==[^=\r\n]+==(?!=)/gu);
+  for (const line of content3.matchAll(/^.*\|.*$/gm)) {
+    if (line[0].replace(/!?\[\[[^\r\n]*?\]\]/g, "").includes("|")) {
+      protectedRanges.push([line.index, line.index + line[0].length]);
+    }
+  }
   protect(/#[\p{L}\p{N}_/-]+/gu);
   const edits = [];
   const word = /[\p{L}\p{M}\p{N}_]/u;
   const segmenter = typeof Intl.Segmenter === "function" ? new Intl.Segmenter(void 0, { granularity: "word" }) : null;
   const tree = fromMarkdown(content3);
   function visit(node2) {
-    var _a2, _b, _c;
+    var _a, _b, _c;
     if (["link", "image", "linkReference", "imageReference", "definition", "code", "inlineCode", "html"].includes(node2.type)) return;
     if (node2.type === "text") {
       const start = node2.position.start.offset;
@@ -4955,7 +4994,7 @@ function autoLink(content3, entries, options) {
         const a = start + match.index;
         const b = a + match[0].length;
         if (protectedRanges.some(([lo, hi]) => a < hi && b > lo)) continue;
-        const before = (_a2 = Array.from(content3.slice(Math.max(0, a - 2), a)).pop()) != null ? _a2 : "";
+        const before = (_a = Array.from(content3.slice(Math.max(0, a - 2), a)).pop()) != null ? _a : "";
         const after = (_b = Array.from(content3.slice(b, b + 2))[0]) != null ? _b : "";
         if (options.wholeWord && !(boundaries.has(a - start) && boundaries.has(b - start)) && (word.test(before) || word.test(after))) continue;
         const entry = unique.get(key(match[0]));
@@ -5029,6 +5068,47 @@ function titleTerms(title, minimumLength) {
   return [...result].filter((term) => term !== title);
 }
 
+// keywords.ts
+function validKeyword(value) {
+  return typeof value === "string" && value.trim().length > 0 && !/[\[\]|\r\n]/u.test(value);
+}
+function propertyKeywords(value) {
+  return [...new Set((Array.isArray(value) ? value : [value]).filter(validKeyword).map((term) => term.trim()))];
+}
+function highlightKeywords(content3) {
+  const blocked = [];
+  const protect = (pattern) => {
+    for (const match of content3.matchAll(pattern)) {
+      blocked.push([match.index, match.index + match[0].length]);
+    }
+  };
+  protect(/^\uFEFF?---[^\S\r\n]*\r?\n[\s\S]*?(?:\r?\n(?:---|\.\.\.)[^\S\r\n]*(?=\r?\n|$)|$)/g);
+  protect(/!?\[\[[\s\S]*?(?:\]\]|$)/g);
+  protect(/%%[\s\S]*?(?:%%|$)/g);
+  protect(/\$\$[\s\S]*?(?:\$\$|$)|\$[^\n$]+\$/g);
+  protect(/(?:https?:\/\/|mailto:|www\.)[^\s<>]+/gi);
+  const result = /* @__PURE__ */ new Set();
+  function visit(node2) {
+    var _a;
+    if (["link", "image", "linkReference", "imageReference", "definition", "code", "inlineCode", "html"].includes(node2.type)) return;
+    if (node2.type === "text") {
+      const offset = node2.position.start.offset;
+      const raw = content3.slice(offset, node2.position.end.offset);
+      if (raw !== node2.value) return;
+      for (const match of raw.matchAll(/(?<!=)==([^=\r\n]*[^\s=][^=\r\n]*)==(?!=)/gu)) {
+        const start = offset + match.index;
+        const end = start + match[0].length;
+        if (blocked.some(([lo, hi]) => start < hi && end > lo)) continue;
+        if (validKeyword(match[1])) result.add(match[1].trim());
+      }
+    } else {
+      for (const child of (_a = node2.children) != null ? _a : []) visit(child);
+    }
+  }
+  visit(fromMarkdown(content3));
+  return [...result];
+}
+
 // main.ts
 var import_obsidian2 = require("obsidian");
 var DEFAULT_SETTINGS = {
@@ -5036,7 +5116,9 @@ var DEFAULT_SETTINGS = {
   caseSensitive: false,
   minimumLength: 3,
   useAliases: true,
-  useTitleKeywords: true,
+  useTitleKeywords: false,
+  useHighlights: true,
+  useKeywords: true,
   autoLinkAutomatically: false,
   wholeWord: true
 };
@@ -5045,6 +5127,8 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
     super(...arguments);
     this.timers = /* @__PURE__ */ new Map();
     this.processing = /* @__PURE__ */ new Set();
+    this.highlightCache = /* @__PURE__ */ new Map();
+    this.sourceSignatures = /* @__PURE__ */ new Map();
     this.unloaded = false;
   }
   t() {
@@ -5061,70 +5145,96 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
           new import_obsidian2.Notice(this.t().noFile);
           return;
         }
-        let changed = false;
         try {
-          changed = await this.processFile(file);
+          const changed = await this.processFile(file);
+          new import_obsidian2.Notice(changed ? this.t().currentDone(file.basename) : this.t().noMatches);
         } catch (error) {
           console.error("Smart Auto Link", error);
           new import_obsidian2.Notice(this.t().failed);
-          return;
         }
-        new import_obsidian2.Notice(changed ? this.t().currentDone(file.basename) : this.t().noMatches);
       }
     });
     this.vaultCommand = this.addCommand({
       id: "auto-link-entire-vault",
       name: this.t().vaultCommand,
-      callback: async () => {
-        const files = this.app.vault.getMarkdownFiles();
-        const entries = this.getEntries();
-        let changed = 0;
-        for (const file of files) {
-          let didChange = false;
-          try {
-            didChange = await this.processFile(file, entries);
-          } catch (error) {
-            console.error("Smart Auto Link", file.path, error);
-            new import_obsidian2.Notice(this.t().vaultStopped(file.path, changed));
-            return;
-          }
-          if (didChange) {
-            changed++;
-          }
-        }
-        new import_obsidian2.Notice(changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length));
-      }
+      callback: () => this.linkEntireVault()
     });
     this.addSettingTab(new AutoLinkSettingTab(this.app, this));
     this.registerEvent(this.app.vault.on("modify", (file) => {
+      this.highlightCache.delete(file.path);
       if (file instanceof import_obsidian2.TFile) this.scheduleAutomaticLink(file, 800);
+    }));
+    this.registerEvent(this.app.metadataCache.on("changed", (file) => {
+      this.scheduleAutomaticLink(file, 800);
+    }));
+    this.registerEvent(this.app.vault.on("delete", (file) => {
+      this.highlightCache.delete(file.path);
+      this.sourceSignatures.delete(file.path);
     }));
     this.registerEvent(this.app.workspace.on("file-open", (file) => {
       if (file) this.scheduleAutomaticLink(file, 300);
     }));
     this.app.workspace.onLayoutReady(() => {
-      const file = this.app.workspace.getActiveFile();
-      if (file) this.scheduleAutomaticLink(file, 300);
+      if (!this.settings.autoLinkAutomatically) return;
+      void this.getEntries().then(() => {
+        const file = this.app.workspace.getActiveFile();
+        if (file) this.scheduleAutomaticLink(file, 300);
+      }).catch((error) => console.error("Smart Auto Link index", error));
     });
     this.register(() => {
       this.unloaded = true;
       for (const timer of this.timers.values()) clearTimeout(timer);
       this.timers.clear();
+      this.highlightCache.clear();
+      this.sourceSignatures.clear();
     });
   }
+  async linkEntireVault() {
+    let changed = 0;
+    let path = "";
+    try {
+      const files = this.app.vault.getMarkdownFiles();
+      const entries = await this.getEntries();
+      for (const file of files) {
+        path = file.path;
+        if (await this.processFile(file, entries)) changed++;
+      }
+      const message = changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length);
+      const keywords = new Set(entries.filter((entry) => entry.priority === 1).map((entry) => entry.text + "\0" + entry.file.path)).size;
+      new import_obsidian2.Notice(message + "\n" + this.t().keywordCount(keywords), 8e3);
+    } catch (error) {
+      console.error("Smart Auto Link", path, error);
+      new import_obsidian2.Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
+    }
+  }
   scheduleAutomaticLink(file, delay) {
-    if (this.unloaded || !this.settings.autoLinkAutomatically || file.extension !== "md") return;
+    if (this.unloaded || !this.settings.autoLinkAutomatically || file.extension !== "md" || this.processing.has(file.path)) return;
     const old = this.timers.get(file.path);
     if (old) clearTimeout(old);
-    const timer = setTimeout(() => {
+    this.timers.set(file.path, setTimeout(() => {
       this.timers.delete(file.path);
-      if (this.unloaded || this.processing.has(file.path)) return;
+      if (this.unloaded || !this.settings.autoLinkAutomatically || this.processing.has(file.path)) return;
       this.processing.add(file.path);
-      void this.processFile(file).catch((error) => {
+      void this.runAutomaticLink(file).catch((error) => {
         console.error("Smart Auto Link automatic linking", file.path, error);
       }).finally(() => this.processing.delete(file.path));
-    }, delay);
-    this.timers.set(file.path, timer);
+    }, delay));
+  }
+  async runAutomaticLink(file) {
+    const previous2 = this.sourceSignatures.get(file.path);
+    const entries = await this.getEntries();
+    const changedDefinitions = previous2 !== this.sourceSignatures.get(file.path);
+    const files = changedDefinitions ? this.app.vault.getMarkdownFiles() : [file];
+    for (const target of files) {
+      if (this.unloaded || !this.settings.autoLinkAutomatically) break;
+      if (target.path !== file.path && this.processing.has(target.path)) continue;
+      this.processing.add(target.path);
+      try {
+        await this.processFile(target, entries);
+      } finally {
+        if (target.path !== file.path) this.processing.delete(target.path);
+      }
+    }
   }
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -5137,75 +5247,59 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
   async saveSettings() {
     await this.saveData(this.settings);
   }
-  getEntries() {
-    var _a, _b, _c;
+  async getEntries() {
+    var _a, _b;
     const result = [];
     const files = this.app.vault.getMarkdownFiles();
+    const paths = new Set(files.map((file) => file.path));
+    for (const path of this.highlightCache.keys()) {
+      if (!paths.has(path)) {
+        this.highlightCache.delete(path);
+        this.sourceSignatures.delete(path);
+      }
+    }
     for (const file of files) {
       const name = file.basename.trim();
-      if (name.length >= this.settings.minimumLength) {
-        result.push({
-          text: name,
-          target: file.path.replace(/\.md$/, ""),
-          file,
-          isAlias: false
-        });
-      }
+      const target = file.path.replace(/\.md$/i, "");
+      const add = (text3, priority = 0) => {
+        result.push({ text: text3, target, file, isAlias: text3 !== name, priority });
+      };
+      if (name.length >= this.settings.minimumLength) add(name);
       if (this.settings.useTitleKeywords) {
-        for (const term of titleTerms(name, this.settings.minimumLength)) {
-          result.push({ text: term, target: file.path.replace(/\.md$/, ""), file, isAlias: true });
+        for (const term of titleTerms(name, this.settings.minimumLength)) add(term);
+      }
+      const frontmatter = (_a = this.app.metadataCache.getFileCache(file)) == null ? void 0 : _a.frontmatter;
+      if (this.settings.useAliases) {
+        for (const alias of propertyKeywords((_b = frontmatter == null ? void 0 : frontmatter.aliases) != null ? _b : frontmatter == null ? void 0 : frontmatter.alias)) {
+          if (alias.length >= this.settings.minimumLength) add(alias);
         }
       }
-      if (!this.settings.useAliases) {
-        continue;
-      }
-      const cache = this.app.metadataCache.getFileCache(file);
-      const rawAliases = (_c = (_a = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a.aliases) != null ? _c : (_b = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _b.alias;
-      if (!rawAliases) {
-        continue;
-      }
-      let aliases = [];
-      if (Array.isArray(rawAliases)) {
-        aliases = rawAliases.filter((value) => typeof value === "string");
-      } else if (typeof rawAliases === "string") {
-        aliases = [rawAliases];
-      }
-      for (const alias of aliases) {
-        const cleaned = alias.trim();
-        if (cleaned.length < this.settings.minimumLength) {
-          continue;
+      const declared = this.settings.useKeywords ? propertyKeywords(frontmatter == null ? void 0 : frontmatter.keywords) : [];
+      let highlighted = [];
+      if (this.settings.useHighlights) {
+        const stamp = file.stat ? file.stat.mtime + ":" + file.stat.size : "";
+        let cached = this.highlightCache.get(file.path);
+        if (!cached || !file.stat || cached.stamp !== stamp) {
+          const content3 = await this.app.vault.cachedRead(file);
+          cached = { stamp, terms: content3.includes("==") ? highlightKeywords(content3) : [] };
+          this.highlightCache.set(file.path, cached);
         }
-        result.push({
-          text: cleaned,
-          target: file.path.replace(/\.md$/, ""),
-          file,
-          isAlias: true
-        });
+        highlighted = cached.terms;
       }
+      for (const term of /* @__PURE__ */ new Set([...declared, ...highlighted])) add(term, 1);
+      this.sourceSignatures.set(file.path, JSON.stringify([declared, highlighted]));
     }
-    result.sort((a, b) => b.text.length - a.text.length);
     return result;
   }
-  async processFile(file, allEntries = this.getEntries()) {
-    const ambiguous = /* @__PURE__ */ new Set();
-    const owners = /* @__PURE__ */ new Map();
-    for (const e of allEntries) {
-      const k = this.settings.caseSensitive ? e.text : e.text.toLowerCase();
-      if (owners.has(k) && owners.get(k) !== e.file.path) ambiguous.add(k);
-      owners.set(k, e.file.path);
-    }
-    const entries = allEntries.filter((e) => !ambiguous.has(this.settings.caseSensitive ? e.text : e.text.toLowerCase())).filter(
-      (entry) => entry.file.path !== file.path
-    );
+  async processFile(file, allEntries) {
+    const entries = resolveEntries(allEntries != null ? allEntries : await this.getEntries(), this.settings.caseSensitive, file.path);
     const current = await this.app.vault.cachedRead(file);
     if (this.autoLink(current, entries) === current) return false;
     let changed = false;
     await this.app.vault.process(file, (content3) => {
-      const result = this.autoLink(content3, entries);
-      if (result !== content3) {
-        changed = true;
-      }
-      return result;
+      const output = this.autoLink(content3, entries);
+      changed = output !== content3;
+      return output;
     });
     return changed;
   }
@@ -5222,13 +5316,32 @@ var AutoLinkSettingTab = class extends import_obsidian2.PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     const t = this.plugin.t();
+    containerEl.createEl("p", { text: "Smart Auto Link " + this.plugin.manifest.version, cls: "setting-item-description" });
     new import_obsidian2.Setting(containerEl).setName(t.language).setDesc(t.languageDesc).addDropdown((dropdown) => dropdown.addOption("auto", t.auto).addOption("en", t.english).addOption("th", t.thai).setValue(this.plugin.settings.language).onChange(async (value) => {
       this.plugin.settings.language = value;
       await this.plugin.saveSettings();
       this.plugin.updateCommandNames();
       this.display();
     }));
-    new import_obsidian2.Setting(containerEl).setName(t.automatic).setDesc(t.automaticDesc).addToggle((toggle) => toggle.setValue(this.plugin.settings.autoLinkAutomatically).onChange(async (value) => {
+    containerEl.createEl("h3", { text: t.keywordHeading });
+    containerEl.createEl("p", { text: t.keywordHelp });
+    new import_obsidian2.Setting(containerEl).setName(t.applyKeywords).setDesc(t.applyKeywordsDesc).addButton((button) => button.setButtonText(t.applyNow).setCta().onClick(async () => {
+      button.setDisabled(true);
+      try {
+        await this.plugin.linkEntireVault();
+      } finally {
+        button.setDisabled(false);
+      }
+    }));
+    const toggle = (key, name, desc) => {
+      new import_obsidian2.Setting(containerEl).setName(name).setDesc(desc).addToggle((control) => control.setValue(this.plugin.settings[key]).onChange(async (value) => {
+        this.plugin.settings[key] = value;
+        await this.plugin.saveSettings();
+      }));
+    };
+    toggle("useHighlights", t.highlights, t.highlightsDesc);
+    toggle("useKeywords", t.keywords, t.keywordsDesc);
+    new import_obsidian2.Setting(containerEl).setName(t.automatic).setDesc(t.automaticDesc).addToggle((control) => control.setValue(this.plugin.settings.autoLinkAutomatically).onChange(async (value) => {
       this.plugin.settings.autoLinkAutomatically = value;
       await this.plugin.saveSettings();
       if (value) {
@@ -5236,46 +5349,16 @@ var AutoLinkSettingTab = class extends import_obsidian2.PluginSettingTab {
         if (file) this.plugin.scheduleAutomaticLink(file, 300);
       }
     }));
-    new import_obsidian2.Setting(containerEl).setName(t.titleKeywords).setDesc(t.titleKeywordsDesc).addToggle((toggle) => toggle.setValue(this.plugin.settings.useTitleKeywords).onChange(async (value) => {
-      this.plugin.settings.useTitleKeywords = value;
-      await this.plugin.saveSettings();
+    toggle("useTitleKeywords", t.titleKeywords, t.titleKeywordsDesc);
+    toggle("useAliases", t.aliases, t.aliasesDesc);
+    toggle("caseSensitive", t.caseSensitive, t.caseSensitiveDesc);
+    toggle("wholeWord", t.wholeWord, t.wholeWordDesc);
+    new import_obsidian2.Setting(containerEl).setName(t.minLength).setDesc(t.minLengthDesc).addText((text3) => text3.setPlaceholder("3").setValue(String(this.plugin.settings.minimumLength)).onChange(async (value) => {
+      const number = Number(value);
+      if (Number.isInteger(number) && number >= 1) {
+        this.plugin.settings.minimumLength = number;
+        await this.plugin.saveSettings();
+      }
     }));
-    new import_obsidian2.Setting(containerEl).setName(t.aliases).setDesc(
-      t.aliasesDesc
-    ).addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.useAliases).onChange(async (value) => {
-        this.plugin.settings.useAliases = value;
-        await this.plugin.saveSettings();
-      })
-    );
-    new import_obsidian2.Setting(containerEl).setName(t.caseSensitive).setDesc(
-      t.caseSensitiveDesc
-    ).addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.caseSensitive).onChange(async (value) => {
-        this.plugin.settings.caseSensitive = value;
-        await this.plugin.saveSettings();
-      })
-    );
-    new import_obsidian2.Setting(containerEl).setName(t.wholeWord).setDesc(
-      t.wholeWordDesc
-    ).addToggle(
-      (toggle) => toggle.setValue(this.plugin.settings.wholeWord).onChange(async (value) => {
-        this.plugin.settings.wholeWord = value;
-        await this.plugin.saveSettings();
-      })
-    );
-    new import_obsidian2.Setting(containerEl).setName(t.minLength).setDesc(
-      t.minLengthDesc
-    ).addText(
-      (text3) => text3.setPlaceholder("3").setValue(
-        String(this.plugin.settings.minimumLength)
-      ).onChange(async (value) => {
-        const number = Number(value);
-        if (Number.isInteger(number) && number >= 1) {
-          this.plugin.settings.minimumLength = number;
-          await this.plugin.saveSettings();
-        }
-      })
-    );
   }
 };

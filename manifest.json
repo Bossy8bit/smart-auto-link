@@ -1,9 +1,9 @@
 {
   "id": "smart-auto-link",
   "name": "Smart Auto Link",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "minAppVersion": "1.5.0",
-  "description": "Links note names, title keywords, and aliases across languages.",
+  "description": "Links multilingual highlights and keywords back to the notes that define them.",
   "author": "Nattapat",
   "isDesktopOnly": false
 }

@@ -1,23 +1,32 @@
 import { fromMarkdown } from 'mdast-util-from-markdown';
 
-export interface Entry { text: string; target: string; file: { path: string }; isAlias: boolean }
+export interface Entry { text: string; target: string; file: { path: string }; isAlias: boolean; priority?: number }
 export interface Options { caseSensitive: boolean; wholeWord: boolean }
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** Explicit highlights/properties take precedence; conflicting definitions are skipped. */
+export function resolveEntries(entries: Entry[], caseSensitive: boolean, sourcePath?: string): Entry[] {
+  const key = (s: string) => caseSensitive ? s : s.toLowerCase();
+  const groups = new Map<string, Entry[]>();
+  for (const entry of entries) {
+    if (!entry.text || /[\[\]|#^\r\n]/.test(entry.target) || /[\[\]|\r\n]/.test(entry.text)) continue;
+    const k = key(entry.text);
+    groups.set(k, [...(groups.get(k) ?? []), entry]);
+  }
+  const result: Entry[] = [];
+  for (const group of groups.values()) {
+    const priority = Math.max(...group.map(entry => entry.priority ?? 0));
+    const preferred = group.filter(entry => (entry.priority ?? 0) === priority);
+    if (new Set(preferred.map(entry => entry.file.path)).size !== 1) continue;
+    if (preferred[0].file.path !== sourcePath) result.push(preferred[0]);
+  }
+  return result;
+}
 
 /** Only replace original text nodes, never generated links or Markdown syntax. */
 export function autoLink(content: string, entries: Entry[], options: Options): string {
   const key = (s: string) => options.caseSensitive ? s : s.toLowerCase();
-  const groups = new Map<string, Entry[]>();
-  for (const entry of entries) {
-    if (!entry.text || /[\[\]|#^\r\n]/.test(entry.target + entry.text)) continue;
-    const k = key(entry.text);
-    groups.set(k, [...(groups.get(k) ?? []), entry]);
-  }
-  const unique = new Map<string, Entry>();
-  for (const [k, group] of groups) {
-    // A shared name/alias must not silently link to an arbitrary file.
-    if (new Set(group.map(e => e.file.path)).size === 1) unique.set(k, group[0]);
-  }
+  const unique = new Map(resolveEntries(entries, options.caseSensitive).map(entry => [key(entry.text), entry]));
   const terms = [...unique.values()].sort((a, b) => b.text.length - a.text.length);
   if (!terms.length) return content;
   const regex = new RegExp(terms.map(e => escape(e.text)).join('|'), options.caseSensitive ? 'gu' : 'giu');
@@ -30,8 +39,14 @@ export function autoLink(content: string, entries: Entry[], options: Options): s
   protect(/%%[\s\S]*?(?:%%|$)/g);
   protect(/\$\$[\s\S]*?(?:\$\$|$)|\$[^\n$]+\$/g);
   protect(/(?:https?:\/\/|mailto:|www\.)[^\s<>]+/gi);
-  // Preserve GFM tables and tags as units; pipe aliases can alter table syntax.
-  protect(/^.*\|.*$/gm);
+  // Highlighted text defines a keyword and must remain visible in its source note.
+  protect(/(?<!=)==[^=\r\n]+==(?!=)/gu);
+  // Preserve table/pipe rows, but do not mistake existing alias links for a table.
+  for (const line of content.matchAll(/^.*\|.*$/gm)) {
+    if (line[0].replace(/!?\[\[[^\r\n]*?\]\]/g, '').includes('|')) {
+      protectedRanges.push([line.index!, line.index! + line[0].length]);
+    }
+  }
   protect(/#[\p{L}\p{N}_/-]+/gu);
   const edits: { start: number; end: number; value: string }[] = [];
   const word = /[\p{L}\p{M}\p{N}_]/u;

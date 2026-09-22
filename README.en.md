@@ -1,42 +1,88 @@
 # Smart Auto Link
 
-Smart Auto Link turns matching note names, title keywords, and YAML aliases into Obsidian wikilinks. It runs on Windows, macOS, and Linux, and requires no Node.js installation to use. The manifest also permits mobile installation, though mobile has not been tested.
+[ภาษาไทย](README.md) · [Latest release](https://github.com/Bossy8bit/smart-auto-link/releases/latest)
 
-[คู่มือภาษาไทย](README.md)
+Define important terms using **==highlights==** or a **keywords** property in the destination note. Matching text in other notes links back to that note. Explicit terms support all writing systems, short words, single characters, and emoji.
 
-## Install
+## Example
 
-1. Download the ZIP from this repository's Releases page and extract its `smart-auto-link` folder into `<Vault>/.obsidian/plugins/`.
-2. Confirm that `<Vault>/.obsidian/plugins/smart-auto-link/main.js` and `manifest.json` exist directly inside that folder.
-3. Reload Obsidian, then enable **Smart Auto Link** under **Settings → Community plugins**.
+In **Taxes.md**:
 
-To install from a source checkout, run `npm ci && npm run build`, then copy `main.js` and `manifest.json` into the plugin folder.
+~~~md
+==salary== ==เงินเดือน== ==税==
+~~~
+
+Another note contains:
+
+~~~md
+Read about salary, เงินเดือน and 税.
+~~~
+
+After linking:
+
+~~~md
+Read about [[Taxes|salary]], [[Taxes|เงินเดือน]] and [[Taxes|税]].
+~~~
+
+The original highlights in Taxes.md remain intact. There are no self-links; Obsidian's Backlinks panel shows the notes linking into Taxes.md.
 
 ## Use
 
-Open the command palette with **Ctrl+P** (**Cmd+P** on macOS), then run **Smart Auto Link: Auto-link current note** or **Smart Auto Link: Auto-link entire vault**. The commands modify Markdown files directly. Try the vault command on a copy of your vault first; there is no vault-wide preview, backup, or undo in this version.
+1. Write ==a plain-text term== in the note you want other notes to link to, then save it.
+2. Open **Settings → Smart Auto Link**. **Use ==highlights== as keywords** is enabled by default.
+3. Click **Link entire vault now**, or run **Smart Auto Link: Auto-link entire vault** from Ctrl+P / Cmd+P.
+4. The notice reports changed notes and indexed keyword definitions. If it finds zero definitions, check for two equals signs on each side of your term.
 
-For example, with `Python.md` and `Artificial Intelligence.md` containing the YAML alias `AI`, the sentence `Python helps AI` becomes `[[Python]] helps [[Artificial Intelligence|AI]]`. Set **Minimum term length** to **2** to include `AI`; its default is 3.
+For ongoing changes, opt into **Link when opening or saving a note** (off by default). Saving a changed keyword definition updates matching text in other notes; ordinary open/save events process that note.
 
-The **Link keywords from note titles** setting is on by default and uses Unicode word segmentation across writing systems. For example, a note named วางแผนภาษีเงินเดือนในไทย can be linked from the word เงินเดือน in another note without adding an alias. You can turn this off in Settings.
+## Keywords without highlights
 
-To link on opening or saving a note, enable **Link when opening or saving a note** in plugin settings. It is off by default so you can choose when notes are changed. The plugin skips files with no new matches.
+Add a **keywords** property of type **List**, or put this YAML at the top of the destination note:
 
-The plugin links every matching occurrence. It skips self-links and terms shared by multiple destination notes. It preserves existing links, code, frontmatter, URLs, comments, math, tags, and table lines. Unicode word segmentation supports many languages and writing systems; results can vary for uncommon phrases or languages with limited segmentation support on the device. Linking happens when you run a command, not automatically while typing.
+~~~yaml
+---
+keywords:
+  - salary
+  - AI
+  - 税
+  - ضريبة
+---
+~~~
 
-## Languages
+No separate salary or AI note is required. The note declaring these keywords is the destination. Explicit keywords and highlights ignore the minimum-length setting.
 
-Commands, notices, and settings are available in English and Thai. **Settings → Smart Auto Link → Language** defaults to **Auto (Obsidian)**. You can choose **English** or **ไทย** explicitly. A changed command name may require reopening the command palette.
+## Install or update
+
+1. Download and extract smart-auto-link.zip from Releases.
+2. Copy its smart-auto-link folder into Vault/.obsidian/plugins/. The folder must directly contain main.js and manifest.json.
+3. Disable and re-enable Smart Auto Link under Community plugins, or restart Obsidian, to load the new code.
+4. Check the loaded version at the top of plugin settings.
+
+Windows, macOS and Linux are supported without installing Node.js. The manifest permits mobile, but actual mobile devices have not been tested.
+
+## Matching behavior
+
+- Explicit highlighted/Properties keywords take precedence over inferred terms and note names.
+- If multiple notes define the same term, the ambiguous term is skipped.
+- Source highlights, existing links, code, frontmatter, URLs, and protected Markdown remain intact.
+- Highlights inside code, links, comments or math are not definitions. Use highlights around plain text.
+- Repeated runs do not nest links. Removing/changing a definition does not remove or retarget previously created links.
+- Whole-word matching uses the device's Unicode word segmenter. Disable it for literal substring matching if segmentation does not fit your language.
+- Matching does not translate languages: tax and ภาษี are separate terms. Declare both when they should point to the same note.
+- Traditional note-name and alias matching remain available. Guessing keywords from titles is off by default for new settings.
+- Some wikilink-reserved characters in terms or target filenames are skipped.
+
+Commands modify Markdown files. There is no vault-wide undo feature. Note contents are never sent to a network service.
 
 ## Develop
 
-```sh
+~~~sh
 npm ci
 npm run typecheck
 npm test
 npm run build
-```
+~~~
 
-Only `main.js` and `manifest.json` are required at runtime. The plugin does not transmit note content to a network service.
+Tests build the current bundle first and cover Markdown safety, Unicode highlights, destination selection and mock-vault workflows.
 
-Obsidian API references: https://github.com/obsidianmd/obsidian-api and https://github.com/obsidianmd/obsidian-sample-plugin
+API reference: https://github.com/obsidianmd/obsidian-api
