@@ -40,6 +40,8 @@ var messages = {
     auto: "Auto (Obsidian)",
     english: "English",
     thai: "\u0E44\u0E17\u0E22",
+    titleKeywords: "Link keywords from note titles",
+    titleKeywordsDesc: "Find distinctive words and phrases in note titles automatically. Shared terms are skipped.",
     aliases: "Use aliases",
     aliasesDesc: "Use aliases from YAML frontmatter as automatic link terms.",
     caseSensitive: "Case sensitive",
@@ -62,6 +64,8 @@ var messages = {
     auto: "\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 (Obsidian)",
     english: "English",
     thai: "\u0E44\u0E17\u0E22",
+    titleKeywords: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15",
+    titleKeywordsDesc: "\u0E14\u0E36\u0E07\u0E04\u0E33\u0E2B\u0E23\u0E37\u0E2D\u0E27\u0E25\u0E35\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E43\u0E2B\u0E49\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E41\u0E25\u0E30\u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E0A\u0E35\u0E49\u0E44\u0E14\u0E49\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15",
     aliases: "\u0E43\u0E0A\u0E49\u0E0A\u0E37\u0E48\u0E2D\u0E2D\u0E37\u0E48\u0E19 (aliases)",
     aliasesDesc: "\u0E43\u0E0A\u0E49 aliases \u0E43\u0E19 YAML frontmatter \u0E40\u0E1B\u0E47\u0E19\u0E04\u0E33\u0E04\u0E49\u0E19\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C",
     caseSensitive: "\u0E41\u0E22\u0E01\u0E15\u0E31\u0E27\u0E1E\u0E34\u0E21\u0E1E\u0E4C\u0E43\u0E2B\u0E0D\u0E48\u0E40\u0E25\u0E47\u0E01",
@@ -1352,14 +1356,14 @@ var SpliceBuffer = class {
    *   Array of items.
    */
   slice(start, end) {
-    const stop = end === null || end === void 0 ? Number.POSITIVE_INFINITY : end;
-    if (stop < this.left.length) {
-      return this.left.slice(start, stop);
+    const stop2 = end === null || end === void 0 ? Number.POSITIVE_INFINITY : end;
+    if (stop2 < this.left.length) {
+      return this.left.slice(start, stop2);
     }
     if (start > this.left.length) {
-      return this.right.slice(this.right.length - stop + this.left.length, this.right.length - start + this.left.length).reverse();
+      return this.right.slice(this.right.length - stop2 + this.left.length, this.right.length - start + this.left.length).reverse();
     }
-    return this.left.slice(start).concat(this.right.slice(this.right.length - stop + this.left.length).reverse());
+    return this.left.slice(start).concat(this.right.slice(this.right.length - stop2 + this.left.length).reverse());
   }
   /**
    * Mimics the behavior of Array.prototype.splice() except for the change of
@@ -4351,7 +4355,7 @@ function compiler(options) {
     }
     return tree;
   }
-  function prepareList(events, start, length) {
+  function prepareList(events, start, length2) {
     let index2 = start - 1;
     let containerBalance = -1;
     let listSpread = false;
@@ -4359,7 +4363,7 @@ function compiler(options) {
     let lineIndex;
     let firstBlankLineIndex;
     let atMarker;
-    while (++index2 <= length) {
+    while (++index2 <= length2) {
       const event = events[index2];
       switch (event[1].type) {
         case "listUnordered":
@@ -4418,7 +4422,7 @@ function compiler(options) {
           listItem2.end = Object.assign({}, lineIndex ? events[lineIndex][1].start : event[1].end);
           events.splice(lineIndex || index2, 0, ["exit", listItem2, event[2]]);
           index2++;
-          length++;
+          length2++;
         }
         if (event[1].type === "listItemPrefix") {
           const item = {
@@ -4431,14 +4435,14 @@ function compiler(options) {
           listItem2 = item;
           events.splice(index2, 0, ["enter", item, event[2]]);
           index2++;
-          length++;
+          length2++;
           firstBlankLineIndex = void 0;
           atMarker = true;
         }
       }
     }
     events[start][1]._spread = listSpread;
-    return length;
+    return length2;
   }
   function opener(create, and) {
     return open;
@@ -4921,6 +4925,7 @@ function autoLink(content3, entries, options) {
   protect(/#[\p{L}\p{N}_/-]+/gu);
   const edits = [];
   const word = /[\p{L}\p{M}\p{N}_]/u;
+  const segmenter = typeof Intl.Segmenter === "function" ? new Intl.Segmenter(void 0, { granularity: "word" }) : null;
   const tree = fromMarkdown(content3);
   function visit(node2) {
     var _a2, _b, _c;
@@ -4930,6 +4935,13 @@ function autoLink(content3, entries, options) {
       const end = node2.position.end.offset;
       const raw = content3.slice(start, end);
       if (raw !== node2.value) return;
+      const boundaries = /* @__PURE__ */ new Set();
+      if (segmenter) {
+        for (const segment of segmenter.segment(raw)) {
+          boundaries.add(segment.index);
+          boundaries.add(segment.index + segment.segment.length);
+        }
+      }
       regex.lastIndex = 0;
       for (const match of raw.matchAll(regex)) {
         const a = start + match.index;
@@ -4937,7 +4949,7 @@ function autoLink(content3, entries, options) {
         if (protectedRanges.some(([lo, hi]) => a < hi && b > lo)) continue;
         const before = (_a2 = Array.from(content3.slice(Math.max(0, a - 2), a)).pop()) != null ? _a2 : "";
         const after = (_b = Array.from(content3.slice(b, b + 2))[0]) != null ? _b : "";
-        if (options.wholeWord && (word.test(before) || word.test(after))) continue;
+        if (options.wholeWord && !(boundaries.has(a - start) && boundaries.has(b - start)) && (word.test(before) || word.test(after))) continue;
         const entry = unique.get(key(match[0]));
         if (!entry) continue;
         const value = match[0] === entry.target ? `[[${entry.target}]]` : `[[${entry.target}|${match[0]}]]`;
@@ -4951,6 +4963,64 @@ function autoLink(content3, entries, options) {
   return output;
 }
 
+// title-terms.ts
+var compactScript = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+var length = (value) => [...value].length;
+var singleStop = /* @__PURE__ */ new Set(["\u0E40\u0E14\u0E37\u0E2D\u0E19"]);
+var incompleteEnds = /* @__PURE__ */ new Set(["\u0E40\u0E07\u0E34\u0E19"]);
+var stop = /* @__PURE__ */ new Set([
+  "\u0E01\u0E32\u0E23",
+  "\u0E02\u0E2D\u0E07",
+  "\u0E41\u0E25\u0E30",
+  "\u0E43\u0E19",
+  "\u0E08\u0E32\u0E01",
+  "\u0E01\u0E31\u0E1A",
+  "\u0E40\u0E1E\u0E37\u0E48\u0E2D",
+  "\u0E17\u0E35\u0E48",
+  "\u0E40\u0E1B\u0E47\u0E19",
+  "\u0E44\u0E14\u0E49",
+  "\u0E43\u0E2B\u0E49",
+  "\u0E41\u0E19\u0E27\u0E17\u0E32\u0E07",
+  "\u0E27\u0E32\u0E07\u0E41\u0E1C\u0E19",
+  "\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14",
+  "\u0E27\u0E34\u0E18\u0E35",
+  "\u0E04\u0E39\u0E48\u0E21\u0E37\u0E2D",
+  "\u0E40\u0E23\u0E37\u0E48\u0E2D\u0E07",
+  "\u0E40\u0E01\u0E35\u0E48\u0E22\u0E27\u0E01\u0E31\u0E1A",
+  "\u0E09\u0E1A\u0E31\u0E1A",
+  "the",
+  "and",
+  "for",
+  "with",
+  "from",
+  "into",
+  "about",
+  "guide",
+  "notes"
+]);
+function titleTerms(title, minimumLength) {
+  if (typeof Intl.Segmenter !== "function") return [];
+  const segments = [...new Intl.Segmenter(void 0, { granularity: "word" }).segment(title)];
+  const result = /* @__PURE__ */ new Set();
+  for (let i = 0; i < segments.length; i++) {
+    const first = segments[i];
+    if (!first.isWordLike || stop.has(first.segment.toLocaleLowerCase())) continue;
+    const singleMin = compactScript.test(first.segment) ? minimumLength : Math.max(minimumLength, 5);
+    if (length(first.segment) >= singleMin && !singleStop.has(first.segment.toLocaleLowerCase())) {
+      result.add(first.segment);
+    }
+    for (let count = 2; count <= 3 && i + count <= segments.length; count++) {
+      const group = segments.slice(i, i + count);
+      if (group.some((item, j) => !item.isWordLike || stop.has(item.segment.toLocaleLowerCase()) || j > 0 && item.index !== group[j - 1].index + group[j - 1].segment.length)) break;
+      if (incompleteEnds.has(group[group.length - 1].segment)) continue;
+      const term = group.map((item) => item.segment).join("");
+      const phraseMin = compactScript.test(term) ? minimumLength : Math.max(minimumLength, 6);
+      if (length(term) >= phraseMin) result.add(term);
+    }
+  }
+  return [...result].filter((term) => term !== title);
+}
+
 // main.ts
 var import_obsidian2 = require("obsidian");
 var DEFAULT_SETTINGS = {
@@ -4958,6 +5028,7 @@ var DEFAULT_SETTINGS = {
   caseSensitive: false,
   minimumLength: 3,
   useAliases: true,
+  useTitleKeywords: true,
   wholeWord: true
 };
 var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
@@ -5035,6 +5106,11 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
           isAlias: false
         });
       }
+      if (this.settings.useTitleKeywords) {
+        for (const term of titleTerms(name, this.settings.minimumLength)) {
+          result.push({ text: term, target: file.path.replace(/\.md$/, ""), file, isAlias: true });
+        }
+      }
       if (!this.settings.useAliases) {
         continue;
       }
@@ -5104,6 +5180,10 @@ var AutoLinkSettingTab = class extends import_obsidian2.PluginSettingTab {
       await this.plugin.saveSettings();
       this.plugin.updateCommandNames();
       this.display();
+    }));
+    new import_obsidian2.Setting(containerEl).setName(t.titleKeywords).setDesc(t.titleKeywordsDesc).addToggle((toggle) => toggle.setValue(this.plugin.settings.useTitleKeywords).onChange(async (value) => {
+      this.plugin.settings.useTitleKeywords = value;
+      await this.plugin.saveSettings();
     }));
     new import_obsidian2.Setting(containerEl).setName(t.aliases).setDesc(
       t.aliasesDesc

@@ -21,7 +21,7 @@ check('frontmatter CRLF','---\r\naliases: Python\r\n---\r\nPython','---\r\nalias
 check('nested protection','`[[Python]] https://Python.org` Python','`[[Python]] https://Python.org` [[Python]]');
 check('comments math urls','%% Python %% $Python$ https://Python.org Python','%% Python %% $Python$ https://Python.org [[Python]]');
 check('reference links','[Python][ref]\n\n[ref]: https://Python.org\n','[Python][ref]\n\n[ref]: https://Python.org\n');
-check('Thai boundaries','เรียน ภาษาไทย ภาษาไทยดี','เรียน [[ภาษาไทย]] ภาษาไทยดี',[entry('ภาษาไทย')]);
+check('Thai boundaries','เรียน ภาษาไทย ภาษาไทยดี','เรียน [[ภาษาไทย]] [[ภาษาไทย]]ดี',[entry('ภาษาไทย')]);
 check('combining marks','Cafe\u0301 Cafe','Cafe\u0301 [[Cafe]]',[entry('Cafe')]);
 check('case sensitive','python Python','python [[Python]]',[entry('Python')],{...options,caseSensitive:true});
 check('regex metacharacters','C++','[[C++]]',[entry('C++')]);

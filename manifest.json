@@ -1,9 +1,9 @@
 {
   "id": "smart-auto-link",
   "name": "Smart Auto Link",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minAppVersion": "1.5.0",
-  "description": "Automatically converts matching note names and aliases into Obsidian wikilinks.",
+  "description": "Links note names, title keywords, and aliases across languages.",
   "author": "Nattapat",
   "isDesktopOnly": false
 }

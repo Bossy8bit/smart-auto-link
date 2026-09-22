@@ -1,5 +1,6 @@
 import { Language, translator } from "./i18n";
 import { autoLink as linkMarkdown } from "./linker";
+import { titleTerms } from "./title-terms";
 import {
   App,
   Command,
@@ -15,6 +16,7 @@ interface AutoLinkSettings {
   caseSensitive: boolean;
   minimumLength: number;
   useAliases: boolean;
+  useTitleKeywords: boolean;
   wholeWord: boolean;
 }
 
@@ -23,6 +25,7 @@ const DEFAULT_SETTINGS: AutoLinkSettings = {
   caseSensitive: false,
   minimumLength: 3,
   useAliases: true,
+  useTitleKeywords: true,
   wholeWord: true,
 };
 
@@ -122,6 +125,12 @@ export default class SmartAutoLinkPlugin extends Plugin {
           file,
           isAlias: false,
         });
+      }
+
+      if (this.settings.useTitleKeywords) {
+        for (const term of titleTerms(name, this.settings.minimumLength)) {
+          result.push({ text: term, target: file.path.replace(/\.md$/, ""), file, isAlias: true });
+        }
       }
 
       if (!this.settings.useAliases) {
@@ -237,6 +246,16 @@ class AutoLinkSettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
           this.plugin.updateCommandNames();
           this.display();
+        }));
+
+    new Setting(containerEl)
+      .setName(t.titleKeywords)
+      .setDesc(t.titleKeywordsDesc)
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.useTitleKeywords)
+        .onChange(async value => {
+          this.plugin.settings.useTitleKeywords = value;
+          await this.plugin.saveSettings();
         }));
 
     new Setting(containerEl)

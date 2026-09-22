@@ -1,6 +1,6 @@
 # Smart Auto Link
 
-Smart Auto Link turns matching note names and YAML aliases into Obsidian wikilinks. It runs on Windows, macOS, and Linux, and requires no Node.js installation to use. The manifest also permits mobile installation, though mobile has not been tested.
+Smart Auto Link turns matching note names, title keywords, and YAML aliases into Obsidian wikilinks. It runs on Windows, macOS, and Linux, and requires no Node.js installation to use. The manifest also permits mobile installation, though mobile has not been tested.
 
 [คู่มือภาษาไทย](README.md)
 
@@ -18,7 +18,9 @@ Open the command palette with **Ctrl+P** (**Cmd+P** on macOS), then run **Smart 
 
 For example, with `Python.md` and `Artificial Intelligence.md` containing the YAML alias `AI`, the sentence `Python helps AI` becomes `[[Python]] helps [[Artificial Intelligence|AI]]`. Set **Minimum term length** to **2** to include `AI`; its default is 3.
 
-The plugin links every matching occurrence. It skips self-links and terms shared by multiple destination notes. It preserves existing links, code, frontmatter, URLs, comments, math, tags, and table lines. Unicode word boundaries are supported, but Thai word segmentation is not: when whole-word matching is on, a Thai term attached to another word is skipped. Linking happens when you run a command, not automatically while typing.
+The **Link keywords from note titles** setting is on by default and uses Unicode word segmentation across writing systems. For example, a note named วางแผนภาษีเงินเดือนในไทย can be linked from the word เงินเดือน in another note without adding an alias. You can turn this off in Settings.
+
+The plugin links every matching occurrence. It skips self-links and terms shared by multiple destination notes. It preserves existing links, code, frontmatter, URLs, comments, math, tags, and table lines. Unicode word segmentation supports many languages and writing systems; results can vary for uncommon phrases or languages with limited segmentation support on the device. Linking happens when you run a command, not automatically while typing.
 
 ## Languages
 
