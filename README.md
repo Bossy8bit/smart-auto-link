@@ -2,7 +2,7 @@
 
 [English guide](README.en.md)
 
-ปลั๊กอิน Obsidian เปลี่ยนชื่อโน้ตและ aliases เป็น wikilinks โดยสั่งผ่าน Command palette รองรับ Windows / macOS / Linux และไม่มี Node.js dependency ขณะใช้งานใน Obsidian (manifest อนุญาต mobile แต่ยังไม่ได้ทดสอบบนอุปกรณ์จริง)
+ปลั๊กอิน Obsidian เปลี่ยนชื่อโน้ต คำสำคัญจากชื่อ และ aliases เป็น wikilinks ผ่าน Command palette และมีตัวเลือกให้ทำงานเมื่อเปิดหรือบันทึกโน้ต รองรับ Windows / macOS / Linux และไม่มี Node.js dependency ขณะใช้งานใน Obsidian (manifest อนุญาต mobile แต่ยังไม่ได้ทดสอบบนอุปกรณ์จริง)
 
 ## ติดตั้ง
 
@@ -12,6 +12,10 @@
 4. กด Ctrl+P (macOS: Cmd+P) เลือก **Smart Auto Link: Auto-link current note** หรือ **Auto-link entire vault**
 
 คำสั่งแก้เนื้อหาไฟล์จริง ควรทดลองกับ vault สำเนาก่อนใช้ทั้ง vault รุ่นนี้ไม่มี preview, backup หรือ undo ของทั้ง vault ในตัว และยังไม่ทำงานอัตโนมัติระหว่างพิมพ์
+
+## ลิงก์อัตโนมัติเมื่อเปิดหรือบันทึก
+
+ไปที่ **Settings → Smart Auto Link → ลิงก์เมื่อเปิดหรือบันทึกโน้ต** แล้วเปิดสวิตช์ หากต้องการให้เขียนลิงก์โดยไม่ต้องเรียกคำสั่งทุกครั้ง ค่าเริ่มต้นปิดเพื่อให้คุณควบคุมการแก้โน้ตเอง ปลั๊กอินไม่เขียนซ้ำเมื่อไม่มีลิงก์ใหม่ และข้ามลิงก์เดิม
 
 ## ใช้ง่ายโดยไม่ต้องเพิ่ม alias
 

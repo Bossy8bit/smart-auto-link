@@ -17,6 +17,7 @@ interface AutoLinkSettings {
   minimumLength: number;
   useAliases: boolean;
   useTitleKeywords: boolean;
+  autoLinkAutomatically: boolean;
   wholeWord: boolean;
 }
 
@@ -26,6 +27,7 @@ const DEFAULT_SETTINGS: AutoLinkSettings = {
   minimumLength: 3,
   useAliases: true,
   useTitleKeywords: true,
+  autoLinkAutomatically: false,
   wholeWord: true,
 };
 
@@ -40,6 +42,9 @@ export default class SmartAutoLinkPlugin extends Plugin {
   settings: AutoLinkSettings;
   private currentCommand?: Command;
   private vaultCommand?: Command;
+  private timers = new Map<string, ReturnType<typeof setTimeout>>();
+  private processing = new Set<string>();
+  private unloaded = false;
 
   t() { return translator(this.settings.language); }
 
@@ -57,13 +62,14 @@ export default class SmartAutoLinkPlugin extends Plugin {
           return;
         }
 
-        try { await this.processFile(file); } catch (error) {
+        let changed = false;
+        try { changed = await this.processFile(file); } catch (error) {
           console.error("Smart Auto Link", error);
           new Notice(this.t().failed);
           return;
         }
 
-        new Notice(this.t().currentDone(file.basename));
+        new Notice(changed ? this.t().currentDone(file.basename) : this.t().noMatches);
       },
     });
 
@@ -94,6 +100,36 @@ export default class SmartAutoLinkPlugin extends Plugin {
     });
 
     this.addSettingTab(new AutoLinkSettingTab(this.app, this));
+    this.registerEvent(this.app.vault.on("modify", file => {
+      if (file instanceof TFile) this.scheduleAutomaticLink(file, 800);
+    }));
+    this.registerEvent(this.app.workspace.on("file-open", file => {
+      if (file) this.scheduleAutomaticLink(file, 300);
+    }));
+    this.app.workspace.onLayoutReady(() => {
+      const file = this.app.workspace.getActiveFile();
+      if (file) this.scheduleAutomaticLink(file, 300);
+    });
+    this.register(() => {
+      this.unloaded = true;
+      for (const timer of this.timers.values()) clearTimeout(timer);
+      this.timers.clear();
+    });
+  }
+
+  scheduleAutomaticLink(file: TFile, delay: number): void {
+    if (this.unloaded || !this.settings.autoLinkAutomatically || file.extension !== "md") return;
+    const old = this.timers.get(file.path);
+    if (old) clearTimeout(old);
+    const timer = setTimeout(() => {
+      this.timers.delete(file.path);
+      if (this.unloaded || this.processing.has(file.path)) return;
+      this.processing.add(file.path);
+      void this.processFile(file).catch(error => {
+        console.error("Smart Auto Link automatic linking", file.path, error);
+      }).finally(() => this.processing.delete(file.path));
+    }, delay);
+    this.timers.set(file.path, timer);
   }
 
   async loadSettings() {
@@ -196,6 +232,8 @@ export default class SmartAutoLinkPlugin extends Plugin {
       (entry) => entry.file.path !== file.path
     );
 
+    const current = await this.app.vault.cachedRead(file);
+    if (this.autoLink(current, entries) === current) return false;
     let changed = false;
 
     await this.app.vault.process(file, (content) => {
@@ -246,6 +284,20 @@ class AutoLinkSettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
           this.plugin.updateCommandNames();
           this.display();
+        }));
+
+    new Setting(containerEl)
+      .setName(t.automatic)
+      .setDesc(t.automaticDesc)
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.autoLinkAutomatically)
+        .onChange(async value => {
+          this.plugin.settings.autoLinkAutomatically = value;
+          await this.plugin.saveSettings();
+          if (value) {
+            const file = this.plugin.app.workspace.getActiveFile();
+            if (file) this.plugin.scheduleAutomaticLink(file, 300);
+          }
         }));
 
     new Setting(containerEl)

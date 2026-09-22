@@ -20,6 +20,8 @@ For example, with `Python.md` and `Artificial Intelligence.md` containing the YA
 
 The **Link keywords from note titles** setting is on by default and uses Unicode word segmentation across writing systems. For example, a note named วางแผนภาษีเงินเดือนในไทย can be linked from the word เงินเดือน in another note without adding an alias. You can turn this off in Settings.
 
+To link on opening or saving a note, enable **Link when opening or saving a note** in plugin settings. It is off by default so you can choose when notes are changed. The plugin skips files with no new matches.
+
 The plugin links every matching occurrence. It skips self-links and terms shared by multiple destination notes. It preserves existing links, code, frontmatter, URLs, comments, math, tags, and table lines. Unicode word segmentation supports many languages and writing systems; results can vary for uncommon phrases or languages with limited segmentation support on the device. Linking happens when you run a command, not automatically while typing.
 
 ## Languages

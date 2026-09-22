@@ -32,6 +32,7 @@ var messages = {
     vaultCommand: "Auto-link entire vault",
     noFile: "No active Markdown note.",
     currentDone: (name) => `Auto-linked: ${name}`,
+    noMatches: "No matching note names or title keywords found.",
     failed: "Auto-link failed. See developer console for details.",
     vaultStopped: (path, count) => `Stopped at ${path}. ${count} notes changed; remaining notes untouched.`,
     vaultDone: (changed, total) => `Auto-link finished. ${changed}/${total} notes changed.`,
@@ -40,6 +41,8 @@ var messages = {
     auto: "Auto (Obsidian)",
     english: "English",
     thai: "\u0E44\u0E17\u0E22",
+    automatic: "Link when opening or saving a note",
+    automaticDesc: "Optional: update notes automatically after opening or saving. Off by default.",
     titleKeywords: "Link keywords from note titles",
     titleKeywordsDesc: "Find distinctive words and phrases in note titles automatically. Shared terms are skipped.",
     aliases: "Use aliases",
@@ -56,6 +59,7 @@ var messages = {
     vaultCommand: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E17\u0E31\u0E49\u0E07 Vault",
     noFile: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E42\u0E19\u0E49\u0E15 Markdown \u0E17\u0E35\u0E48\u0E40\u0E1B\u0E34\u0E14\u0E2D\u0E22\u0E39\u0E48",
     currentDone: (name) => `\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E41\u0E25\u0E49\u0E27: ${name}`,
+    noMatches: "\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E2B\u0E23\u0E37\u0E2D\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E17\u0E35\u0E48\u0E15\u0E23\u0E07\u0E01\u0E31\u0E19",
     failed: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E44\u0E21\u0E48\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08 \u0E14\u0E39\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E43\u0E19 developer console",
     vaultStopped: (path, count) => `\u0E2B\u0E22\u0E38\u0E14\u0E17\u0E35\u0E48 ${path} \u0E41\u0E01\u0E49\u0E44\u0E02\u0E41\u0E25\u0E49\u0E27 ${count} \u0E42\u0E19\u0E49\u0E15 \u0E42\u0E19\u0E49\u0E15\u0E17\u0E35\u0E48\u0E40\u0E2B\u0E25\u0E37\u0E2D\u0E22\u0E31\u0E07\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E41\u0E01\u0E49\u0E44\u0E02`,
     vaultDone: (changed, total) => `\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E2A\u0E23\u0E47\u0E08\u0E41\u0E25\u0E49\u0E27 \u0E41\u0E01\u0E49\u0E44\u0E02 ${changed}/${total} \u0E42\u0E19\u0E49\u0E15`,
@@ -64,6 +68,8 @@ var messages = {
     auto: "\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 (Obsidian)",
     english: "English",
     thai: "\u0E44\u0E17\u0E22",
+    automatic: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E42\u0E19\u0E49\u0E15",
+    automaticDesc: "\u0E40\u0E1B\u0E34\u0E14\u0E43\u0E0A\u0E49\u0E40\u0E2D\u0E07\u0E2B\u0E32\u0E01\u0E15\u0E49\u0E2D\u0E07\u0E01\u0E32\u0E23\u0E43\u0E2B\u0E49\u0E1B\u0E25\u0E31\u0E4A\u0E01\u0E2D\u0E34\u0E19\u0E41\u0E01\u0E49\u0E42\u0E19\u0E49\u0E15\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E04\u0E48\u0E32\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19\u0E1B\u0E34\u0E14",
     titleKeywords: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15",
     titleKeywordsDesc: "\u0E14\u0E36\u0E07\u0E04\u0E33\u0E2B\u0E23\u0E37\u0E2D\u0E27\u0E25\u0E35\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E43\u0E2B\u0E49\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E41\u0E25\u0E30\u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E0A\u0E35\u0E49\u0E44\u0E14\u0E49\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15",
     aliases: "\u0E43\u0E0A\u0E49\u0E0A\u0E37\u0E48\u0E2D\u0E2D\u0E37\u0E48\u0E19 (aliases)",
@@ -5029,9 +5035,16 @@ var DEFAULT_SETTINGS = {
   minimumLength: 3,
   useAliases: true,
   useTitleKeywords: true,
+  autoLinkAutomatically: false,
   wholeWord: true
 };
 var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
+  constructor() {
+    super(...arguments);
+    this.timers = /* @__PURE__ */ new Map();
+    this.processing = /* @__PURE__ */ new Set();
+    this.unloaded = false;
+  }
   t() {
     return translator(this.settings.language);
   }
@@ -5046,14 +5059,15 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
           new import_obsidian2.Notice(this.t().noFile);
           return;
         }
+        let changed = false;
         try {
-          await this.processFile(file);
+          changed = await this.processFile(file);
         } catch (error) {
           console.error("Smart Auto Link", error);
           new import_obsidian2.Notice(this.t().failed);
           return;
         }
-        new import_obsidian2.Notice(this.t().currentDone(file.basename));
+        new import_obsidian2.Notice(changed ? this.t().currentDone(file.basename) : this.t().noMatches);
       }
     });
     this.vaultCommand = this.addCommand({
@@ -5080,6 +5094,35 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
       }
     });
     this.addSettingTab(new AutoLinkSettingTab(this.app, this));
+    this.registerEvent(this.app.vault.on("modify", (file) => {
+      if (file instanceof import_obsidian2.TFile) this.scheduleAutomaticLink(file, 800);
+    }));
+    this.registerEvent(this.app.workspace.on("file-open", (file) => {
+      if (file) this.scheduleAutomaticLink(file, 300);
+    }));
+    this.app.workspace.onLayoutReady(() => {
+      const file = this.app.workspace.getActiveFile();
+      if (file) this.scheduleAutomaticLink(file, 300);
+    });
+    this.register(() => {
+      this.unloaded = true;
+      for (const timer of this.timers.values()) clearTimeout(timer);
+      this.timers.clear();
+    });
+  }
+  scheduleAutomaticLink(file, delay) {
+    if (this.unloaded || !this.settings.autoLinkAutomatically || file.extension !== "md") return;
+    const old = this.timers.get(file.path);
+    if (old) clearTimeout(old);
+    const timer = setTimeout(() => {
+      this.timers.delete(file.path);
+      if (this.unloaded || this.processing.has(file.path)) return;
+      this.processing.add(file.path);
+      void this.processFile(file).catch((error) => {
+        console.error("Smart Auto Link automatic linking", file.path, error);
+      }).finally(() => this.processing.delete(file.path));
+    }, delay);
+    this.timers.set(file.path, timer);
   }
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
@@ -5152,6 +5195,8 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
     const entries = allEntries.filter((e) => !ambiguous.has(this.settings.caseSensitive ? e.text : e.text.toLowerCase())).filter(
       (entry) => entry.file.path !== file.path
     );
+    const current = await this.app.vault.cachedRead(file);
+    if (this.autoLink(current, entries) === current) return false;
     let changed = false;
     await this.app.vault.process(file, (content3) => {
       const result = this.autoLink(content3, entries);
@@ -5180,6 +5225,14 @@ var AutoLinkSettingTab = class extends import_obsidian2.PluginSettingTab {
       await this.plugin.saveSettings();
       this.plugin.updateCommandNames();
       this.display();
+    }));
+    new import_obsidian2.Setting(containerEl).setName(t.automatic).setDesc(t.automaticDesc).addToggle((toggle) => toggle.setValue(this.plugin.settings.autoLinkAutomatically).onChange(async (value) => {
+      this.plugin.settings.autoLinkAutomatically = value;
+      await this.plugin.saveSettings();
+      if (value) {
+        const file = this.plugin.app.workspace.getActiveFile();
+        if (file) this.plugin.scheduleAutomaticLink(file, 300);
+      }
     }));
     new import_obsidian2.Setting(containerEl).setName(t.titleKeywords).setDesc(t.titleKeywordsDesc).addToggle((toggle) => toggle.setValue(this.plugin.settings.useTitleKeywords).onChange(async (value) => {
       this.plugin.settings.useTitleKeywords = value;

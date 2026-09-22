@@ -1,12 +1,12 @@
 {
   "name": "smart-auto-link",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "node esbuild.mjs",
     "build": "node esbuild.mjs production",
     "typecheck": "tsc --noEmit",
-    "test": "node test.mjs && node title-terms.test.mjs"
+    "test": "node test.mjs && node title-terms.test.mjs && node plugin.test.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
