@@ -53,7 +53,7 @@ var messages = {
     applyNow: "Link entire vault now",
     keywordCount: (count) => count ? "Keyword definitions indexed: " + count + "." : "No keyword definitions found. Add ==term== or a keywords property to a destination note.",
     automatic: "Link when opening or saving a note",
-    automaticDesc: "Off by default. Link opened/saved notes; changed keyword definitions also update matching notes across the vault.",
+    automaticDesc: "On by default. Scans the whole vault on startup, then links notes as they are opened or saved. Title terms, highlights, and keywords can connect notes in Graph.",
     titleKeywords: "Link keywords from note titles",
     titleKeywordsDesc: "Find distinctive words and phrases in note titles automatically. Shared terms are skipped.",
     aliases: "Use aliases",
@@ -91,7 +91,7 @@ var messages = {
     applyNow: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E17\u0E31\u0E49\u0E07 Vault \u0E15\u0E2D\u0E19\u0E19\u0E35\u0E49",
     keywordCount: (count) => count ? "\u0E1E\u0E1A\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E17\u0E35\u0E48\u0E01\u0E33\u0E2B\u0E19\u0E14\u0E44\u0E27\u0E49 " + count + " \u0E23\u0E32\u0E22\u0E01\u0E32\u0E23" : "\u0E22\u0E31\u0E07\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D \u0E40\u0E1E\u0E34\u0E48\u0E21 ==\u0E04\u0E33== \u0E2B\u0E23\u0E37\u0E2D Properties \u0E0A\u0E37\u0E48\u0E2D keywords \u0E43\u0E19\u0E42\u0E19\u0E49\u0E15\u0E1B\u0E25\u0E32\u0E22\u0E17\u0E32\u0E07",
     automatic: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E42\u0E19\u0E49\u0E15",
-    automaticDesc: "\u0E04\u0E48\u0E32\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19\u0E1B\u0E34\u0E14 \u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E43\u0E0A\u0E49\u0E08\u0E30\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E15\u0E2D\u0E19\u0E40\u0E1B\u0E34\u0E14/\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01 \u0E41\u0E25\u0E30\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E40\u0E1B\u0E25\u0E35\u0E48\u0E22\u0E19\u0E08\u0E30\u0E2D\u0E31\u0E1B\u0E40\u0E14\u0E15\u0E42\u0E19\u0E49\u0E15\u0E17\u0E35\u0E48\u0E15\u0E23\u0E07\u0E01\u0E31\u0E19\u0E17\u0E31\u0E49\u0E07 Vault",
+    automaticDesc: "\u0E40\u0E1B\u0E34\u0E14\u0E40\u0E1B\u0E47\u0E19\u0E04\u0E48\u0E32\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19 \u0E2A\u0E41\u0E01\u0E19\u0E17\u0E31\u0E49\u0E07 Vault \u0E15\u0E2D\u0E19\u0E40\u0E23\u0E34\u0E48\u0E21 \u0E41\u0E25\u0E49\u0E27\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E42\u0E19\u0E49\u0E15 \u0E43\u0E0A\u0E49\u0E04\u0E33\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15 \u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C \u0E41\u0E25\u0E30 keywords \u0E40\u0E1B\u0E47\u0E19\u0E08\u0E38\u0E14\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E21\u0E43\u0E19 Graph",
     titleKeywords: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15",
     titleKeywordsDesc: "\u0E14\u0E36\u0E07\u0E04\u0E33\u0E2B\u0E23\u0E37\u0E2D\u0E27\u0E25\u0E35\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E43\u0E2B\u0E49\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E41\u0E25\u0E30\u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E0A\u0E35\u0E49\u0E44\u0E14\u0E49\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15",
     aliases: "\u0E43\u0E0A\u0E49\u0E0A\u0E37\u0E48\u0E2D\u0E2D\u0E37\u0E48\u0E19 (aliases)",
@@ -5116,10 +5116,11 @@ var DEFAULT_SETTINGS = {
   caseSensitive: false,
   minimumLength: 3,
   useAliases: true,
-  useTitleKeywords: false,
+  useTitleKeywords: true,
   useHighlights: true,
   useKeywords: true,
-  autoLinkAutomatically: false,
+  autoLinkAutomatically: true,
+  automaticSetupComplete: false,
   wholeWord: true
 };
 var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
@@ -5175,11 +5176,9 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
       if (file) this.scheduleAutomaticLink(file, 300);
     }));
     this.app.workspace.onLayoutReady(() => {
-      if (!this.settings.autoLinkAutomatically) return;
-      void this.getEntries().then(() => {
-        const file = this.app.workspace.getActiveFile();
-        if (file) this.scheduleAutomaticLink(file, 300);
-      }).catch((error) => console.error("Smart Auto Link index", error));
+      if (this.settings.autoLinkAutomatically) {
+        void this.processVault(false);
+      }
     });
     this.register(() => {
       this.unloaded = true;
@@ -5190,6 +5189,9 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
     });
   }
   async linkEntireVault() {
+    return this.processVault(true);
+  }
+  async processVault(showNotice) {
     let changed = 0;
     let path = "";
     try {
@@ -5201,10 +5203,10 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
       }
       const message = changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length);
       const keywords = new Set(entries.filter((entry) => entry.priority === 1).map((entry) => entry.text + "\0" + entry.file.path)).size;
-      new import_obsidian2.Notice(message + "\n" + this.t().keywordCount(keywords), 8e3);
+      if (showNotice) new import_obsidian2.Notice(message + "\n" + this.t().keywordCount(keywords), 8e3);
     } catch (error) {
       console.error("Smart Auto Link", path, error);
-      new import_obsidian2.Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
+      if (showNotice) new import_obsidian2.Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
     }
   }
   scheduleAutomaticLink(file, delay) {
@@ -5237,7 +5239,14 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
     }
   }
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const saved = await this.loadData();
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, saved);
+    if (!(saved == null ? void 0 : saved.automaticSetupComplete)) {
+      this.settings.autoLinkAutomatically = true;
+      this.settings.useTitleKeywords = true;
+      this.settings.automaticSetupComplete = true;
+      await this.saveData(this.settings);
+    }
     if (!["auto", "en", "th"].includes(this.settings.language)) this.settings.language = "auto";
   }
   updateCommandNames() {

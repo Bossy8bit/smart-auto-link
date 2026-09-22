@@ -32,11 +32,15 @@ vm.runInNewContext(readFileSync('main.js', 'utf8'), {
 
 const plugin = new module.exports.default();
 plugin.loadData = async () => null;
+plugin.saveData = async () => {};
 await plugin.loadSettings();
-assert.equal(plugin.settings.autoLinkAutomatically, false);
+assert.equal(plugin.settings.autoLinkAutomatically, true);
+assert.equal(plugin.settings.useTitleKeywords, true);
 const file = new TFile('Current.md');
 plugin.scheduleAutomaticLink(file, 10);
-assert.equal(plugin.timers.size, 0, 'default setting must never schedule a write');
+assert.equal(plugin.timers.size, 1, 'automatic linking is enabled by default');
+for (const timer of plugin.timers.values()) clearTimeout(timer);
+plugin.timers.clear();
 
 let content = 'No target here';
 let writes = 0;
@@ -54,7 +58,7 @@ assert.equal(content, '[[Python]] is useful');
 assert.equal(writes, 1);
 assert.equal(await plugin.processFile(file, entries), false);
 assert.equal(writes, 1, 'repeat run must not write');
-console.log('Plugin opt-in and no-op write guards passed.');
+console.log('Automatic defaults and no-op write guards passed.');
 
 // End-to-end explicit definitions: no note title or alias match is needed.
 const source = new TFile('Topics/Source.md');
@@ -112,4 +116,14 @@ plugin.scheduleAutomaticLink(source, 1);
 plugin.settings.autoLinkAutomatically = false;
 await new Promise(resolve => setTimeout(resolve, 15));
 assert.equal(documentWrites, writesBeforeCancel, 'turning automatic mode off cancels pending mutation');
-console.log('Source-note highlights/Properties, short multilingual terms, ambiguity and opt-in updates passed.');
+// Automatic startup mode applies title-derived terms across every note without a manual command.
+const titleSource = new TFile('Salary Planning.md');
+const titleTarget = new TFile('Daily Log.md');
+files.push(titleSource, titleTarget);
+docs.set(titleSource.path, 'Reference page.');
+docs.set(titleTarget.path, 'Salary is part of this plan.');
+plugin.settings.minimumLength = 3;
+plugin.settings.useTitleKeywords = true;
+await plugin.processVault(false);
+assert.equal(docs.get(titleTarget.path), '[[Salary Planning|Salary]] is part of this plan.');
+console.log('Automatic defaults, startup vault scan, title-derived links and explicit multilingual keyword workflows passed.');

@@ -13,6 +13,7 @@ interface AutoLinkSettings {
   useHighlights: boolean;
   useKeywords: boolean;
   autoLinkAutomatically: boolean;
+  automaticSetupComplete: boolean;
   wholeWord: boolean;
 }
 
@@ -21,10 +22,11 @@ const DEFAULT_SETTINGS: AutoLinkSettings = {
   caseSensitive: false,
   minimumLength: 3,
   useAliases: true,
-  useTitleKeywords: false,
+  useTitleKeywords: true,
   useHighlights: true,
   useKeywords: true,
-  autoLinkAutomatically: false,
+  autoLinkAutomatically: true,
+  automaticSetupComplete: false,
   wholeWord: true,
 };
 
@@ -81,11 +83,9 @@ export default class SmartAutoLinkPlugin extends Plugin {
       if (file) this.scheduleAutomaticLink(file, 300);
     }));
     this.app.workspace.onLayoutReady(() => {
-      if (!this.settings.autoLinkAutomatically) return;
-      void this.getEntries().then(() => {
-        const file = this.app.workspace.getActiveFile();
-        if (file) this.scheduleAutomaticLink(file, 300);
-      }).catch(error => console.error("Smart Auto Link index", error));
+      if (this.settings.autoLinkAutomatically) {
+        void this.processVault(false);
+      }
     });
     this.register(() => {
       this.unloaded = true;
@@ -97,6 +97,10 @@ export default class SmartAutoLinkPlugin extends Plugin {
   }
 
   async linkEntireVault(): Promise<void> {
+    return this.processVault(true);
+  }
+
+  private async processVault(showNotice: boolean): Promise<void> {
     let changed = 0;
     let path = "";
     try {
@@ -109,10 +113,10 @@ export default class SmartAutoLinkPlugin extends Plugin {
       const message = changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length);
       const keywords = new Set(entries.filter(entry => entry.priority === 1)
         .map(entry => entry.text + "\u0000" + entry.file.path)).size;
-      new Notice(message + "\n" + this.t().keywordCount(keywords), 8000);
+      if (showNotice) new Notice(message + "\n" + this.t().keywordCount(keywords), 8000);
     } catch (error) {
       console.error("Smart Auto Link", path, error);
-      new Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
+      if (showNotice) new Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
     }
   }
 
@@ -150,7 +154,15 @@ export default class SmartAutoLinkPlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    const saved = await this.loadData();
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, saved);
+    // Migrate old opt-in installations to automatic mode once; later user toggles persist.
+    if (!saved?.automaticSetupComplete) {
+      this.settings.autoLinkAutomatically = true;
+      this.settings.useTitleKeywords = true;
+      this.settings.automaticSetupComplete = true;
+      await this.saveData(this.settings);
+    }
     if (!["auto", "en", "th"].includes(this.settings.language)) this.settings.language = "auto";
   }
 

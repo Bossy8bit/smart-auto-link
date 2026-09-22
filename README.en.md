@@ -2,7 +2,7 @@
 
 [ภาษาไทย](README.md) · [Latest release](https://github.com/Bossy8bit/smart-auto-link/releases/latest)
 
-Define important terms using **==highlights==** or a **keywords** property in the destination note. Matching text in other notes links back to that note. Explicit terms support all writing systems, short words, single characters, and emoji.
+Smart Auto Link scans the vault and automatically creates cross-note links from note titles, aliases, and terms defined with **==highlights==** or a **keywords** property. Matching text links to its destination note across writing systems.
 
 ## Example
 
@@ -18,7 +18,7 @@ Another note contains:
 Read about salary, เงินเดือน and 税.
 ~~~
 
-After linking:
+When Obsidian opens the vault or a note is saved, it automatically creates:
 
 ~~~md
 Read about [[Taxes|salary]], [[Taxes|เงินเดือน]] and [[Taxes|税]].
@@ -28,12 +28,12 @@ The original highlights in Taxes.md remain intact. There are no self-links; Obsi
 
 ## Use
 
-1. Write ==a plain-text term== in the note you want other notes to link to, then save it.
-2. Open **Settings → Smart Auto Link**. **Use ==highlights== as keywords** is enabled by default.
-3. Click **Link entire vault now**, or run **Smart Auto Link: Auto-link entire vault** from Ctrl+P / Cmd+P.
-4. The notice reports changed notes and indexed keyword definitions. If it finds zero definitions, check for two equals signs on each side of your term.
+1. Enable Smart Auto Link under **Settings → Community plugins**.
+2. On the next vault startup, it scans and links the whole vault, then links notes as they are opened or saved.
+3. Add specific destination terms with ==highlights== or a **keywords** property. Note titles and aliases also provide automatic link terms.
+4. Open **Open graph view** to see the links. You can still run **Smart Auto Link: Auto-link entire vault** from Ctrl+P / Cmd+P.
 
-For ongoing changes, opt into **Link when opening or saving a note** (off by default). Saving a changed keyword definition updates matching text in other notes; ordinary open/save events process that note.
+Automatic linking is on by default. It scans the full vault at startup, then links notes on open/save and updates other notes when keyword definitions change.
 
 ## Keywords without highlights
 
@@ -69,7 +69,7 @@ Windows, macOS and Linux are supported without installing Node.js. The manifest 
 - Repeated runs do not nest links. Removing/changing a definition does not remove or retarget previously created links.
 - Whole-word matching uses the device's Unicode word segmenter. Disable it for literal substring matching if segmentation does not fit your language.
 - Matching does not translate languages: tax and ภาษี are separate terms. Declare both when they should point to the same note.
-- Traditional note-name and alias matching remain available. Guessing keywords from titles is off by default for new settings.
+- Full note names, distinctive words or phrases from titles, and aliases are automatic link terms. Ambiguous terms shared by multiple destinations are skipped.
 - Some wikilink-reserved characters in terms or target filenames are skipped.
 
 Commands modify Markdown files. There is no vault-wide undo feature. Note contents are never sent to a network service.
