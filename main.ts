@@ -95,7 +95,7 @@ export default class SmartAutoLinkPlugin extends Plugin {
           }
         }
 
-        new Notice(this.t().vaultDone(changed, files.length));
+        new Notice(changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length));
       },
     });
 

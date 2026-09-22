@@ -32,10 +32,11 @@ var messages = {
     vaultCommand: "Auto-link entire vault",
     noFile: "No active Markdown note.",
     currentDone: (name) => `Auto-linked: ${name}`,
-    noMatches: "No matching note names or title keywords found.",
+    noMatches: "No new links to add. Existing links are unchanged.",
     failed: "Auto-link failed. See developer console for details.",
     vaultStopped: (path, count) => `Stopped at ${path}. ${count} notes changed; remaining notes untouched.`,
     vaultDone: (changed, total) => `Auto-link finished. ${changed}/${total} notes changed.`,
+    vaultUnchanged: (total) => `No new links to add in ${total} notes. Existing links are unchanged.`,
     language: "Language",
     languageDesc: "Choose the language for commands, notices, and settings. Auto follows Obsidian.",
     auto: "Auto (Obsidian)",
@@ -59,10 +60,11 @@ var messages = {
     vaultCommand: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E17\u0E31\u0E49\u0E07 Vault",
     noFile: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E42\u0E19\u0E49\u0E15 Markdown \u0E17\u0E35\u0E48\u0E40\u0E1B\u0E34\u0E14\u0E2D\u0E22\u0E39\u0E48",
     currentDone: (name) => `\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E41\u0E25\u0E49\u0E27: ${name}`,
-    noMatches: "\u0E44\u0E21\u0E48\u0E1E\u0E1A\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E2B\u0E23\u0E37\u0E2D\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E17\u0E35\u0E48\u0E15\u0E23\u0E07\u0E01\u0E31\u0E19",
+    noMatches: "\u0E44\u0E21\u0E48\u0E21\u0E35\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E43\u0E2B\u0E21\u0E48\u0E43\u0E2B\u0E49\u0E40\u0E1E\u0E34\u0E48\u0E21 \u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E14\u0E34\u0E21\u0E22\u0E31\u0E07\u0E2D\u0E22\u0E39\u0E48",
     failed: "\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E44\u0E21\u0E48\u0E2A\u0E33\u0E40\u0E23\u0E47\u0E08 \u0E14\u0E39\u0E23\u0E32\u0E22\u0E25\u0E30\u0E40\u0E2D\u0E35\u0E22\u0E14\u0E43\u0E19 developer console",
     vaultStopped: (path, count) => `\u0E2B\u0E22\u0E38\u0E14\u0E17\u0E35\u0E48 ${path} \u0E41\u0E01\u0E49\u0E44\u0E02\u0E41\u0E25\u0E49\u0E27 ${count} \u0E42\u0E19\u0E49\u0E15 \u0E42\u0E19\u0E49\u0E15\u0E17\u0E35\u0E48\u0E40\u0E2B\u0E25\u0E37\u0E2D\u0E22\u0E31\u0E07\u0E44\u0E21\u0E48\u0E16\u0E39\u0E01\u0E41\u0E01\u0E49\u0E44\u0E02`,
     vaultDone: (changed, total) => `\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E2A\u0E23\u0E47\u0E08\u0E41\u0E25\u0E49\u0E27 \u0E41\u0E01\u0E49\u0E44\u0E02 ${changed}/${total} \u0E42\u0E19\u0E49\u0E15`,
+    vaultUnchanged: (total) => `\u0E15\u0E23\u0E27\u0E08 ${total} \u0E42\u0E19\u0E49\u0E15\u0E41\u0E25\u0E49\u0E27 \u0E44\u0E21\u0E48\u0E21\u0E35\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E43\u0E2B\u0E21\u0E48\u0E43\u0E2B\u0E49\u0E40\u0E1E\u0E34\u0E48\u0E21 \u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E14\u0E34\u0E21\u0E22\u0E31\u0E07\u0E2D\u0E22\u0E39\u0E48`,
     language: "\u0E20\u0E32\u0E29\u0E32",
     languageDesc: "\u0E40\u0E25\u0E37\u0E2D\u0E01\u0E20\u0E32\u0E29\u0E32\u0E02\u0E2D\u0E07\u0E04\u0E33\u0E2A\u0E31\u0E48\u0E07 \u0E02\u0E49\u0E2D\u0E04\u0E27\u0E32\u0E21\u0E41\u0E08\u0E49\u0E07\u0E40\u0E15\u0E37\u0E2D\u0E19 \u0E41\u0E25\u0E30\u0E01\u0E32\u0E23\u0E15\u0E31\u0E49\u0E07\u0E04\u0E48\u0E32 \u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34\u0E08\u0E30\u0E43\u0E0A\u0E49\u0E20\u0E32\u0E29\u0E32\u0E02\u0E2D\u0E07 Obsidian",
     auto: "\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 (Obsidian)",
@@ -5090,7 +5092,7 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
             changed++;
           }
         }
-        new import_obsidian2.Notice(this.t().vaultDone(changed, files.length));
+        new import_obsidian2.Notice(changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length));
       }
     });
     this.addSettingTab(new AutoLinkSettingTab(this.app, this));
