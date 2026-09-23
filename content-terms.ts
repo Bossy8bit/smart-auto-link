@@ -8,7 +8,7 @@ const stop = new Set([
   'than', 'too', 'very', 'there', 'their', 'then', 'them', 'they', 'your', 'you', 'what', 'will',
   // Thai function words — exact same spelling convention as title-terms.ts (tuned for these notes)
   'การ', 'ของ', 'และ', 'ใน', 'จาก', 'กัับ', 'เพื่่อ', 'ท่ี', 'เป็็น', 'ไ้ด', 'ให',
-  'แนวทาง', 'วางแผน', 'ประหยัด', 'ว่ีธ่ี', 'คู่่มื่่อ', 'เรื่่อง', 'เกี่่ยวกัับ', 'ฉบัับ',
+  'ที่', 'ได้', 'ไม่', 'มา', 'ไป', 'จะ', 'แบบ', 'ตาม', 'หรือ', 'คือ', 'ส่วน', 'ตัว', 'ต้อง', 'ถูก', 'ต่ำ', 'ต้น', 'สูง', 'ยื่น', 'กลับ', 'เสีย', 'ค่า', 'คุณ', 'เพื่อ',
 ]);
 const compactScript = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 const length = (value: string) => [...value].length;
@@ -17,7 +17,7 @@ const length = (value: string) => [...value].length;
  * ponytail: minCount=3 / maxTerms=3 are hardcoded with a known ceiling; promote to
  * settings if per-vault tuning of "how repetitive" matters. O(content) per note.
  */
-export function contentTerms(content: string, minimumLength: number, minCount = 3, maxTerms = 3): string[] {
+export function contentTerms(content: string, minimumLength: number, minCount = 3, maxTerms = 5): string[] {
   if (typeof Intl.Segmenter !== 'function' || !content) return [];
   const blocked: [number, number][] = [];
   const protect = (pattern: RegExp) => {

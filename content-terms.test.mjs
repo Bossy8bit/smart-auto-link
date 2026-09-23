@@ -19,7 +19,7 @@ assert.deepEqual(contentTerms('the the the and and and for for for', 3), [], 'st
 assert.deepEqual(contentTerms('alpha alpha', 3), [], 'below the repeat threshold is ignored');
 
 const many = contentTerms('w11 w11 w11 x22 x22 x22 y33 y33 y33 z44 z44 z44 q55 q55 q55', 3);
-assert.equal(many.length, 3, 'at most three terms per note');
+assert.equal(many.length, 5, 'at most five terms per note');
 
 assert.deepEqual(contentTerms('[[note]] [[note]] [[note]] alpha alpha alpha', 3), ['alpha'], 'existing wikilinks are not counted');
 assert.deepEqual(contentTerms('`alpha` alpha alpha alpha\nalpha alpha alpha\nalpha alpha', 3), ['alpha'], 'code runs are excluded');
