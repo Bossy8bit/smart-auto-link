@@ -1,6 +1,7 @@
 import { Language, translator } from "./i18n";
 import { autoLink, Entry, resolveEntries } from "./linker";
 import { titleTerms } from "./title-terms";
+import { contentTerms } from "./content-terms";
 import { highlightKeywords, propertyKeywords } from "./keywords";
 import { App, Command, Notice, Plugin, PluginSettingTab, Setting, TFile } from "obsidian";
 
@@ -12,6 +13,7 @@ interface AutoLinkSettings {
   useTitleKeywords: boolean;
   useHighlights: boolean;
   useKeywords: boolean;
+  useContentTerms: boolean;
   autoLinkAutomatically: boolean;
   automaticSetupComplete: boolean;
   wholeWord: boolean;
@@ -25,6 +27,7 @@ const DEFAULT_SETTINGS: AutoLinkSettings = {
   useTitleKeywords: true,
   useHighlights: true,
   useKeywords: true,
+  useContentTerms: true,
   autoLinkAutomatically: true,
   automaticSetupComplete: false,
   wholeWord: true,
@@ -36,7 +39,7 @@ export default class SmartAutoLinkPlugin extends Plugin {
   private vaultCommand?: Command;
   private timers = new Map<string, ReturnType<typeof setTimeout>>();
   private processing = new Set<string>();
-  private highlightCache = new Map<string, { stamp: string; terms: string[] }>();
+  private highlightCache = new Map<string, { stamp: string; terms: string[]; contentTerms: string[] }>();
   private sourceSignatures = new Map<string, string>();
   private unloaded = false;
 
@@ -113,7 +116,9 @@ export default class SmartAutoLinkPlugin extends Plugin {
       const message = changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length);
       const keywords = new Set(entries.filter(entry => entry.priority === 1)
         .map(entry => entry.text + "\u0000" + entry.file.path)).size;
-      if (showNotice) new Notice(message + "\n" + this.t().keywordCount(keywords), 8000);
+      // Skip the "add ==term== / keywords" hint when content-term mode is on.
+      const hint = !this.settings.useContentTerms ? "\n" + this.t().keywordCount(keywords) : "";
+      if (showNotice) new Notice(message + hint, 8000);
     } catch (error) {
       console.error("Smart Auto Link", path, error);
       if (showNotice) new Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
@@ -203,18 +208,27 @@ export default class SmartAutoLinkPlugin extends Plugin {
       }
       const declared = this.settings.useKeywords ? propertyKeywords(frontmatter?.keywords) : [];
       let highlighted: string[] = [];
-      if (this.settings.useHighlights) {
+      let inferred: string[] = [];
+      if (this.settings.useHighlights || this.settings.useContentTerms) {
         const stamp = file.stat ? file.stat.mtime + ":" + file.stat.size : "";
         let cached = this.highlightCache.get(file.path);
         if (!cached || !file.stat || cached.stamp !== stamp) {
           const content = await this.app.vault.cachedRead(file);
-          cached = { stamp, terms: content.includes("==") ? highlightKeywords(content) : [] };
+          cached = {
+            stamp,
+            terms: content.includes("==") ? highlightKeywords(content) : [],
+            contentTerms: contentTerms(content, this.settings.minimumLength),
+          };
           this.highlightCache.set(file.path, cached);
         }
-        highlighted = cached.terms;
+        highlighted = this.settings.useHighlights ? cached.terms : [];
+        inferred = this.settings.useContentTerms ? cached.contentTerms : [];
       }
       for (const term of new Set([...declared, ...highlighted])) add(term, 1);
-      this.sourceSignatures.set(file.path, JSON.stringify([declared, highlighted]));
+      // Words inferred from content are priority 0: resolveEntries skips any term
+      // declared by more than one note, i.e. words prominent in several notes.
+      for (const term of inferred) add(term);
+      this.sourceSignatures.set(file.path, JSON.stringify([declared, highlighted, inferred]));
     }
     return result;
   }
@@ -288,6 +302,12 @@ class AutoLinkSettingTab extends PluginSettingTab {
           }
         }));
     toggle("useTitleKeywords", t.titleKeywords, t.titleKeywordsDesc);
+    new Setting(containerEl).setName(t.contentTerms).setDesc(t.contentTermsDesc)
+      .addToggle(control => control.setValue(this.plugin.settings.useContentTerms)
+        .onChange(async value => {
+          this.plugin.settings.useContentTerms = value;
+          await this.plugin.saveSettings();
+        }));
     toggle("useAliases", t.aliases, t.aliasesDesc);
     toggle("caseSensitive", t.caseSensitive, t.caseSensitiveDesc);
     toggle("wholeWord", t.wholeWord, t.wholeWordDesc);

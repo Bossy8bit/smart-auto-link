@@ -76,7 +76,8 @@ Commands modify Markdown files. There is no vault-wide undo feature. Note conten
 
 ## Changelog
 
-- **v1.4.0 (latest):** Automatic cross-note linking is now on by default — full-vault scan at startup, then links notes on open/save using note titles, aliases, ==highlights==, and keywords. Old installations migrate once; later user settings are preserved.
+- **v1.5.0 (latest):** Automatic content-term linking — words that repeat inside a note become link targets automatically. Words prominent in several notes are skipped, and the "add ==term==" hint is suppressed while this mode is on.
+- **v1.4.0:** Automatic cross-note linking is now on by default — full-vault scan at startup, then links notes on open/save using note titles, aliases, ==highlights==, and keywords. Old installations migrate once; later user settings are preserved.
 - **v1.3.0:** Keywords via ==highlights== or a keywords property, one-click Link entire vault, and indexed keyword counts.
 - **v1.2.1:** Clearer no-change notices; existing links stay and files are not rewritten.
 - **v1.2.0:** Opt-in automatic linking on note open/save (off by default), plus commands that report when no matches are found.

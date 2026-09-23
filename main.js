@@ -56,6 +56,8 @@ var messages = {
     automaticDesc: "On by default. Scans the whole vault on startup, then links notes as they are opened or saved. Title terms, highlights, and keywords can connect notes in Graph.",
     titleKeywords: "Link keywords from note titles",
     titleKeywordsDesc: "Find distinctive words and phrases in note titles automatically. Shared terms are skipped.",
+    contentTerms: "Link repeated words from note content",
+    contentTermsDesc: "Extract words that repeat inside each note and link them automatically. A word prominent in several notes is skipped, and no manual ==term== definition is needed.",
     aliases: "Use aliases",
     aliasesDesc: "Use aliases from YAML frontmatter as automatic link terms.",
     caseSensitive: "Case sensitive",
@@ -94,6 +96,8 @@ var messages = {
     automaticDesc: "\u0E40\u0E1B\u0E34\u0E14\u0E40\u0E1B\u0E47\u0E19\u0E04\u0E48\u0E32\u0E40\u0E23\u0E34\u0E48\u0E21\u0E15\u0E49\u0E19 \u0E2A\u0E41\u0E01\u0E19\u0E17\u0E31\u0E49\u0E07 Vault \u0E15\u0E2D\u0E19\u0E40\u0E23\u0E34\u0E48\u0E21 \u0E41\u0E25\u0E49\u0E27\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E40\u0E21\u0E37\u0E48\u0E2D\u0E40\u0E1B\u0E34\u0E14\u0E2B\u0E23\u0E37\u0E2D\u0E1A\u0E31\u0E19\u0E17\u0E36\u0E01\u0E42\u0E19\u0E49\u0E15 \u0E43\u0E0A\u0E49\u0E04\u0E33\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15 \u0E44\u0E2E\u0E44\u0E25\u0E15\u0E4C \u0E41\u0E25\u0E30 keywords \u0E40\u0E1B\u0E47\u0E19\u0E08\u0E38\u0E14\u0E40\u0E0A\u0E37\u0E48\u0E2D\u0E21\u0E43\u0E19 Graph",
     titleKeywords: "\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15",
     titleKeywordsDesc: "\u0E14\u0E36\u0E07\u0E04\u0E33\u0E2B\u0E23\u0E37\u0E2D\u0E27\u0E25\u0E35\u0E08\u0E32\u0E01\u0E0A\u0E37\u0E48\u0E2D\u0E42\u0E19\u0E49\u0E15\u0E43\u0E2B\u0E49\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E41\u0E25\u0E30\u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E0A\u0E35\u0E49\u0E44\u0E14\u0E49\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15",
+    contentTerms: "\u0E25\u0E34\u0E07\u0E04\u0E33\u0E2A\u0E33\u0E04\u0E31\u0E0D\u0E08\u0E32\u0E01\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E2B\u0E32\u0E42\u0E19\u0E49\u0E15",
+    contentTermsDesc: "\u0E14\u0E36\u0E07\u0E04\u0E33\u0E17\u0E35\u0E48\u0E1B\u0E23\u0E32\u0E01\u0E0F\u0E0B\u0E49\u0E33\u0E43\u0E19\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E2B\u0E32\u0E41\u0E15\u0E48\u0E25\u0E30\u0E42\u0E19\u0E49\u0E15\u0E21\u0E32\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C\u0E2D\u0E31\u0E15\u0E42\u0E19\u0E21\u0E31\u0E15\u0E34 \u0E02\u0E49\u0E32\u0E21\u0E04\u0E33\u0E17\u0E35\u0E48\u0E40\u0E14\u0E48\u0E19\u0E40\u0E17\u0E48\u0E32\u0E01\u0E31\u0E19\u0E2B\u0E25\u0E32\u0E22\u0E42\u0E19\u0E49\u0E15 \u0E44\u0E21\u0E48\u0E15\u0E49\u0E2D\u0E07\u0E01\u0E33\u0E2B\u0E19\u0E14 ==term== \u0E40\u0E2D\u0E07",
     aliases: "\u0E43\u0E0A\u0E49\u0E0A\u0E37\u0E48\u0E2D\u0E2D\u0E37\u0E48\u0E19 (aliases)",
     aliasesDesc: "\u0E43\u0E0A\u0E49 aliases \u0E43\u0E19 YAML frontmatter \u0E40\u0E1B\u0E47\u0E19\u0E04\u0E33\u0E04\u0E49\u0E19\u0E2A\u0E33\u0E2B\u0E23\u0E31\u0E1A\u0E2A\u0E23\u0E49\u0E32\u0E07\u0E25\u0E34\u0E07\u0E01\u0E4C",
     caseSensitive: "\u0E41\u0E22\u0E01\u0E15\u0E31\u0E27\u0E1E\u0E34\u0E21\u0E1E\u0E4C\u0E43\u0E2B\u0E0D\u0E48\u0E40\u0E25\u0E47\u0E01",
@@ -1384,14 +1388,14 @@ var SpliceBuffer = class {
    *   Array of items.
    */
   slice(start, end) {
-    const stop2 = end === null || end === void 0 ? Number.POSITIVE_INFINITY : end;
-    if (stop2 < this.left.length) {
-      return this.left.slice(start, stop2);
+    const stop3 = end === null || end === void 0 ? Number.POSITIVE_INFINITY : end;
+    if (stop3 < this.left.length) {
+      return this.left.slice(start, stop3);
     }
     if (start > this.left.length) {
-      return this.right.slice(this.right.length - stop2 + this.left.length, this.right.length - start + this.left.length).reverse();
+      return this.right.slice(this.right.length - stop3 + this.left.length, this.right.length - start + this.left.length).reverse();
     }
-    return this.left.slice(start).concat(this.right.slice(this.right.length - stop2 + this.left.length).reverse());
+    return this.left.slice(start).concat(this.right.slice(this.right.length - stop3 + this.left.length).reverse());
   }
   /**
    * Mimics the behavior of Array.prototype.splice() except for the change of
@@ -4383,7 +4387,7 @@ function compiler(options) {
     }
     return tree;
   }
-  function prepareList(events, start, length2) {
+  function prepareList(events, start, length3) {
     let index2 = start - 1;
     let containerBalance = -1;
     let listSpread = false;
@@ -4391,7 +4395,7 @@ function compiler(options) {
     let lineIndex;
     let firstBlankLineIndex;
     let atMarker;
-    while (++index2 <= length2) {
+    while (++index2 <= length3) {
       const event = events[index2];
       switch (event[1].type) {
         case "listUnordered":
@@ -4450,7 +4454,7 @@ function compiler(options) {
           listItem2.end = Object.assign({}, lineIndex ? events[lineIndex][1].start : event[1].end);
           events.splice(lineIndex || index2, 0, ["exit", listItem2, event[2]]);
           index2++;
-          length2++;
+          length3++;
         }
         if (event[1].type === "listItemPrefix") {
           const item = {
@@ -4463,14 +4467,14 @@ function compiler(options) {
           listItem2 = item;
           events.splice(index2, 0, ["enter", item, event[2]]);
           index2++;
-          length2++;
+          length3++;
           firstBlankLineIndex = void 0;
           atMarker = true;
         }
       }
     }
     events[start][1]._spread = listSpread;
-    return length2;
+    return length3;
   }
   function opener(create, and) {
     return open;
@@ -5068,6 +5072,117 @@ function titleTerms(title, minimumLength) {
   return [...result].filter((term) => term !== title);
 }
 
+// content-terms.ts
+var stop2 = /* @__PURE__ */ new Set([
+  // English function/common words
+  "the",
+  "and",
+  "for",
+  "with",
+  "from",
+  "into",
+  "about",
+  "that",
+  "this",
+  "these",
+  "those",
+  "when",
+  "while",
+  "where",
+  "which",
+  "who",
+  "whom",
+  "whose",
+  "have",
+  "has",
+  "had",
+  "being",
+  "were",
+  "been",
+  "would",
+  "should",
+  "could",
+  "might",
+  "must",
+  "shall",
+  "will",
+  "just",
+  "now",
+  "all",
+  "any",
+  "both",
+  "each",
+  "more",
+  "most",
+  "other",
+  "some",
+  "such",
+  "only",
+  "own",
+  "same",
+  "than",
+  "too",
+  "very",
+  "there",
+  "their",
+  "then",
+  "them",
+  "they",
+  "your",
+  "you",
+  "what",
+  "will",
+  // Thai function words — exact same spelling convention as title-terms.ts (tuned for these notes)
+  "\u0E01\u0E32\u0E23",
+  "\u0E02\u0E2D\u0E07",
+  "\u0E41\u0E25\u0E30",
+  "\u0E43\u0E19",
+  "\u0E08\u0E32\u0E01",
+  "\u0E01\u0E31\u0E31\u0E1A",
+  "\u0E40\u0E1E\u0E37\u0E48\u0E48\u0E2D",
+  "\u0E17\u0E48\u0E35",
+  "\u0E40\u0E1B\u0E47\u0E47\u0E19",
+  "\u0E44\u0E49\u0E14",
+  "\u0E43\u0E2B",
+  "\u0E41\u0E19\u0E27\u0E17\u0E32\u0E07",
+  "\u0E27\u0E32\u0E07\u0E41\u0E1C\u0E19",
+  "\u0E1B\u0E23\u0E30\u0E2B\u0E22\u0E31\u0E14",
+  "\u0E27\u0E48\u0E35\u0E18\u0E48\u0E35",
+  "\u0E04\u0E39\u0E48\u0E48\u0E21\u0E37\u0E48\u0E48\u0E2D",
+  "\u0E40\u0E23\u0E37\u0E48\u0E48\u0E2D\u0E07",
+  "\u0E40\u0E01\u0E35\u0E48\u0E48\u0E22\u0E27\u0E01\u0E31\u0E31\u0E1A",
+  "\u0E09\u0E1A\u0E31\u0E31\u0E1A"
+]);
+var length2 = (value) => [...value].length;
+function contentTerms(content3, minimumLength, minCount = 3, maxTerms = 3) {
+  if (typeof Intl.Segmenter !== "function" || !content3) return [];
+  const blocked = [];
+  const protect = (pattern) => {
+    for (const m of content3.matchAll(pattern)) blocked.push([m.index, m.index + m[0].length]);
+  };
+  protect(/^\uFEFF?---[^\S\r\n]*\r?\n[\s\S]*?(?:\r?\n(?:---|\.\.\.)[^\S\r\n]*(?=\r?\n|$)|$)/g);
+  protect(/!?\[\[[\s\S]*?(?:\]\]|$)/g);
+  protect(/%%[\s\S]*?(?:%%|$)/g);
+  protect(/\$\$[\s\S]*?(?:\$\$|$)|\$[^\n$]+\$/g);
+  protect(/(?:https?:\/\/|mailto:|www\.)[^\s<>]+/gi);
+  const inBlock = (start, end) => blocked.some(([lo, hi]) => start < hi && end > lo);
+  const counts = /* @__PURE__ */ new Map();
+  const segmenter = new Intl.Segmenter(void 0, { granularity: "word" });
+  for (const seg of segmenter.segment(content3)) {
+    if (!seg.isWordLike) continue;
+    const start = seg.index, end = seg.index + seg.segment.length;
+    if (inBlock(start, end)) continue;
+    const word = seg.segment;
+    if (length2(word) < minimumLength) continue;
+    const lower = word.toLocaleLowerCase();
+    if (stop2.has(lower)) continue;
+    const entry = counts.get(lower);
+    if (entry) entry.count++;
+    else counts.set(lower, { count: 1, word });
+  }
+  return [...counts.values()].filter((entry) => entry.count >= minCount).sort((a, b) => b.count - a.count || length2(b.word) - length2(a.word)).slice(0, maxTerms).map((entry) => entry.word);
+}
+
 // keywords.ts
 function validKeyword(value) {
   return typeof value === "string" && value.trim().length > 0 && !/[\[\]|\r\n]/u.test(value);
@@ -5119,6 +5234,7 @@ var DEFAULT_SETTINGS = {
   useTitleKeywords: true,
   useHighlights: true,
   useKeywords: true,
+  useContentTerms: true,
   autoLinkAutomatically: true,
   automaticSetupComplete: false,
   wholeWord: true
@@ -5203,7 +5319,8 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
       }
       const message = changed ? this.t().vaultDone(changed, files.length) : this.t().vaultUnchanged(files.length);
       const keywords = new Set(entries.filter((entry) => entry.priority === 1).map((entry) => entry.text + "\0" + entry.file.path)).size;
-      if (showNotice) new import_obsidian2.Notice(message + "\n" + this.t().keywordCount(keywords), 8e3);
+      const hint = !this.settings.useContentTerms ? "\n" + this.t().keywordCount(keywords) : "";
+      if (showNotice) new import_obsidian2.Notice(message + hint, 8e3);
     } catch (error) {
       console.error("Smart Auto Link", path, error);
       if (showNotice) new import_obsidian2.Notice(path ? this.t().vaultStopped(path, changed) : this.t().failed);
@@ -5285,18 +5402,25 @@ var SmartAutoLinkPlugin = class extends import_obsidian2.Plugin {
       }
       const declared = this.settings.useKeywords ? propertyKeywords(frontmatter == null ? void 0 : frontmatter.keywords) : [];
       let highlighted = [];
-      if (this.settings.useHighlights) {
+      let inferred = [];
+      if (this.settings.useHighlights || this.settings.useContentTerms) {
         const stamp = file.stat ? file.stat.mtime + ":" + file.stat.size : "";
         let cached = this.highlightCache.get(file.path);
         if (!cached || !file.stat || cached.stamp !== stamp) {
           const content3 = await this.app.vault.cachedRead(file);
-          cached = { stamp, terms: content3.includes("==") ? highlightKeywords(content3) : [] };
+          cached = {
+            stamp,
+            terms: content3.includes("==") ? highlightKeywords(content3) : [],
+            contentTerms: contentTerms(content3, this.settings.minimumLength)
+          };
           this.highlightCache.set(file.path, cached);
         }
-        highlighted = cached.terms;
+        highlighted = this.settings.useHighlights ? cached.terms : [];
+        inferred = this.settings.useContentTerms ? cached.contentTerms : [];
       }
       for (const term of /* @__PURE__ */ new Set([...declared, ...highlighted])) add(term, 1);
-      this.sourceSignatures.set(file.path, JSON.stringify([declared, highlighted]));
+      for (const term of inferred) add(term);
+      this.sourceSignatures.set(file.path, JSON.stringify([declared, highlighted, inferred]));
     }
     return result;
   }
@@ -5359,6 +5483,10 @@ var AutoLinkSettingTab = class extends import_obsidian2.PluginSettingTab {
       }
     }));
     toggle("useTitleKeywords", t.titleKeywords, t.titleKeywordsDesc);
+    new import_obsidian2.Setting(containerEl).setName(t.contentTerms).setDesc(t.contentTermsDesc).addToggle((control) => control.setValue(this.plugin.settings.useContentTerms).onChange(async (value) => {
+      this.plugin.settings.useContentTerms = value;
+      await this.plugin.saveSettings();
+    }));
     toggle("useAliases", t.aliases, t.aliasesDesc);
     toggle("caseSensitive", t.caseSensitive, t.caseSensitiveDesc);
     toggle("wholeWord", t.wholeWord, t.wholeWordDesc);

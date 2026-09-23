@@ -1,7 +1,7 @@
 {
   "id": "smart-auto-link",
   "name": "Smart Auto Link",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "minAppVersion": "1.5.0",
   "description": "Links multilingual highlights and keywords back to the notes that define them.",
   "author": "Nattapat",
